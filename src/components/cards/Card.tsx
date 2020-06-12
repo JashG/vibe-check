@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import styled from 'styled-components'
 
 const CardContainer = styled.div`
-  max-width: 1000px;
   background: white;
   color: black;
   -webkit-box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.75);

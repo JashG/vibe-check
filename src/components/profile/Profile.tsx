@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios, { AxiosResponse } from 'axios';
-import { UserData, Playlist, Track, Album, Artist } from '../../constants/types';
-import { fetchUserData, setUserData, fetchUserPlaylists, setUserPlaylists } from '../../store/actions';
-import Card from '../Card';
+import { UserData, Playlist, Track, Album } from '../../constants/types';
+import { fetchUserData,
+  setUserData,
+  fetchUserPlaylists,
+  setUserPlaylists,
+  fetchUserRecentSongs,
+  setUserRecentSongs,
+ } from '../../store/actions';
+import Card from '../cards/Card';
 import Library from '../Library';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -15,7 +21,8 @@ interface OwnProps {
 
 interface ReduxProps {
   userData: UserData,
-  userPlaylists: Playlist[]
+  userPlaylists: Playlist[],
+  userRecentSongs: Track[]
 }
 
 interface DispatchProps {
@@ -23,22 +30,13 @@ interface DispatchProps {
   fetchUserDataAction: () => void,
   setUserPlaylistsAction: (payload: Playlist[]) => void,
   fetchUserPlaylistsAction: () => void,
+  setUserRecentSongs: (payload: Track[]) => void,
+  fetchUserRecentSongs: () => void,
 }
 
 type Props = OwnProps & ReduxProps & DispatchProps
 
-type State = {
-  recentlyPlayed: any[]
-}
-
-class Profile extends Component<Props, State> {
-  
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      recentlyPlayed: []
-    }
-  }
+class Profile extends Component<Props, {}> {
 
   componentDidMount() {
     this.handleInitialData();
@@ -48,13 +46,15 @@ class Profile extends Component<Props, State> {
     // Data that we need when component mounts; calls will be made in parallel
     const userDataApiCalls = [
       this.getUserProfile(),
-      this.getUserRecentlyPlayed()
+      this.getUserRecentlyPlayed(),
     ]
     const responses = await Promise.all(userDataApiCalls);
 
-    this.setInitialState(responses)
+    this.setInitialState(responses);
   }
 
+  // TODO: In our backend, we will re-format data from Spotify API to match the types
+  // we've declared so we don't have to do any formatting on the frontend
   setInitialState = (responses: AxiosResponse<any>[]) => {
     responses.forEach(response => {
       const data = response.data;
@@ -74,8 +74,8 @@ class Profile extends Component<Props, State> {
         const items: [] = data.items;
         if (items) {
           const tracks: Track[] = [];
-          console.log(items);
           items.forEach(item => {
+            console.log(item);
             const trackData = item['track'];
             const albumData = item['track']['album'];
             const album: Album = {
@@ -87,7 +87,7 @@ class Profile extends Component<Props, State> {
               numTracks: albumData['total_tracks'],
             }
             const track: Track = {
-              externalUrl: item['context']['external_urls']['spotify'],
+              externalUrl: item['context'] ? item['context']['external_urls']['spotify'] : '',
               playedAt: item['played_at'],
               album: album,
               artists: trackData['artists'],
@@ -98,9 +98,7 @@ class Profile extends Component<Props, State> {
             tracks.push(track);
           });
 
-          this.setState({
-            recentlyPlayed: tracks
-          });
+          this.props.setUserRecentSongs(tracks);
         }
       }
     });
@@ -119,18 +117,19 @@ class Profile extends Component<Props, State> {
   }
 
   render() {
-    const { recentlyPlayed } = this.state;
     return(
       <Container>
         <Row>
-          <Col xs={12} sm={12} md={9} >
+          <Col xs={{span: 12, order: 1}} md={{span: 9, order:1}}>
             Your Library
             <Card>
               <Library title="Recently Played"
-              items={recentlyPlayed}
+              items={this.props.userRecentSongs || []}
               itemType='track'/>
-              {/* <Library title="Your Playlists"/> */}
             </Card>
+          </Col>
+          <Col xs={{span: 9, order: 2}} md={{span: 3, order: 2}}>
+            Selected Song
           </Col>
         </Row>
       </Container>
@@ -144,6 +143,7 @@ const mapStateToProps = (state: any, ownProps?: OwnProps): ReduxProps => {
   return {
     userData: state.userData.userData,
     userPlaylists: state.userPlaylists.playlists,
+    userRecentSongs: state.userRecentSongs.songs,
   }
 }
 
@@ -153,6 +153,8 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps): DispatchProps =>
     fetchUserDataAction: () => dispatch(fetchUserData()),
     setUserPlaylistsAction: (payload: Playlist[]) => dispatch(setUserPlaylists(payload)),
     fetchUserPlaylistsAction: () => dispatch(fetchUserPlaylists()),
+    setUserRecentSongs: (payload: Track[]) => dispatch(setUserRecentSongs(payload)),
+    fetchUserRecentSongs: () => dispatch(fetchUserRecentSongs()),
   }
 };
 

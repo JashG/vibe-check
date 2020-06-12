@@ -2,9 +2,11 @@ import { combineReducers } from 'redux'
 import {  FETCH_USER_DATA,
           SET_USER_DATA,
           FETCH_USER_PLAYLISTS,
-          SET_USER_PLAYLISTS
+          SET_USER_PLAYLISTS,
+          FETCH_USER_RECENT_SONGS,
+          SET_USER_RECENT_SONGS
         } from '../types';
-import { UserData, Playlist } from '../../constants/types';
+import { UserData, Playlist, Track } from '../../constants/types';
 
 const initialUserData = {
   fetching: false,
@@ -14,6 +16,11 @@ const initialUserData = {
 const initialUserPlaylists = {
   fetching: false,
   playlists: [] as Playlist[]
+}
+
+const initialUserRecentSongs = {
+  fetching: false,
+  songs: [] as Track[]
 }
 
 function userDataReducer(state = initialUserData, action: {type: string; payload?: UserData; }) {
@@ -56,7 +63,28 @@ function userPlaylistsReducer(state = initialUserPlaylists, action: {type: strin
     return state;
 }
 
+function userRecentSongsReducer(state = initialUserRecentSongs, action: {type: string; payload?: Track[]; }) {
+  switch(action.type) {
+    case FETCH_USER_RECENT_SONGS:
+      return {
+        ...state,
+        fetching: true,
+        songs: []
+      }
+
+    case SET_USER_RECENT_SONGS:
+      return {
+        ...state,
+        fetching: false,
+        songs: action.payload
+      }
+  }
+    
+    return state;
+}
+
 export const rootReducer = combineReducers({
   userData: userDataReducer,
   userPlaylists: userPlaylistsReducer,
+  userRecentSongs: userRecentSongsReducer,
 });
