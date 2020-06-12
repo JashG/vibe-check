@@ -5,9 +5,19 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* background: -webkit-linear-gradient(-390deg, #DCECFE 0%, #F5E1EE 100%) no-repeat;
+  background: linear-gradient(120deg, #DCECFE 0%, #F5E1EE 100%) no-repeat; */
+  background-color: #DCECFE;
+  background-attachment: fixed;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/** Semantic ui styling we will override and probably need to address in a better way */
+td:first-child {
+  padding-left: '';
 }
