@@ -75,7 +75,6 @@ class Profile extends Component<Props, {}> {
         if (items) {
           const tracks: Track[] = [];
           items.forEach(item => {
-            console.log(item);
             const trackData = item['track'];
             const albumData = item['track']['album'];
             const album: Album = {

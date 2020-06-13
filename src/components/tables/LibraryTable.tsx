@@ -81,9 +81,9 @@ class LibraryTable extends Component<Props, State> {
     });
   }
 
-  handlePageNumberClick = (e: any, { name }: any) => {
+  handlePageNumberClick = (e: any, { children }: any) => {
     const { currentPage } = this.state;
-    const item: number = +name;
+    const item: number = +children;
 
     if (currentPage === item) return;
 
@@ -93,14 +93,19 @@ class LibraryTable extends Component<Props, State> {
   }
 
   renderPagination = () => {
-    const { numPages } = this.state;
+    const { currentPage, numPages } = this.state;
 
     const renderPageNumbers = () => {
       const items: React.ReactFragment[] = [];
       
       for (let i = 1; i <= numPages; i++) {
         items.push(
-          <Menu.Item as='a' onClick={this.handlePageNumberClick}>{i}</Menu.Item>
+          <Menu.Item as='a'
+          active={currentPage === i}
+          onClick={this.handlePageNumberClick}
+          key={i}>
+            {i}
+          </Menu.Item>
         );
       }
 
@@ -111,11 +116,15 @@ class LibraryTable extends Component<Props, State> {
       <Table.Row>
         <Table.HeaderCell colSpan='4'>
           <Menu floated='right' pagination>
-            <Menu.Item as='a' icon onClick={this.handlePageLeftClick}>
+            <Menu.Item as='a'
+            icon
+            onClick={this.handlePageLeftClick}>
               <Icon name='chevron left' />
             </Menu.Item>
             {renderPageNumbers()}
-            <Menu.Item as='a' icon onClick={this.handlePageRightClick}>
+            <Menu.Item as='a'
+            icon
+            onClick={this.handlePageRightClick}>
               <Icon name='chevron right' />
             </Menu.Item>
           </Menu>
@@ -130,11 +139,11 @@ class LibraryTable extends Component<Props, State> {
 
     const tableRows = () => {
       if (itemType === 'track') {
-        const displaySongName = (name: String, fragmentKey: number) => {
+        const displaySongName = (name: string, fragmentKey: number) => {
           const items: React.ReactFragment[] = [];
           if (name) {
             items.push(
-              <span>{name}</span>
+              <span key={name}>{name}</span>
             );
           }
 

@@ -1,22 +1,19 @@
 import React, { Component } from 'react';
 import styled from 'styled-components'
-import { Dropdown } from 'semantic-ui-react'
 import { Track, Playlist } from '../constants/types';
 import Table from './tables/LibraryTable';
+import Header from '../components/Header';
+
+const tableOptions = [
+  'Recently Played',
+  'Your Playlists'
+]
 
 type Props = {
   title: string,
   items: Track[] | Playlist[],
   itemType: 'track' | 'playlist'
 }
-
-const Heading = styled.div`
-  height: 36px;
-  padding: 8px 0 0 8px;
-  font-size: 18px;
-  background: #F5E1EE;
-  border-bottom: 2px solid rgba(184, 169, 179, 0.3);
-`
 
 const LibraryContent = styled.div`
   // height: 300px;
@@ -27,37 +24,26 @@ class Library extends Component<Props, any> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      source: 'Recently Played'
+      activeTable: 'Recently Played'
     };
   }
 
-  setSource = (event: any, data: any) => {
+  setActiveTable = (event: any, { text }: any) => {
     this.setState({
-      source: data.text
+      activeTable: text
     })
   }
 
-  renderDropdown = () => {
-    const { source } = this.state;
-
-    return (
-      <Heading>
-        <Dropdown text={source} defaultValue={source}>
-          <Dropdown.Menu>
-            <Dropdown.Item text='Recently Played' onClick={this.setSource}/>
-            <Dropdown.Item text='Your Playlists' onClick={this.setSource}/>
-          </Dropdown.Menu>
-        </Dropdown>
-      </Heading>
-    )
-  }
-
   render() {
+    const { activeTable } = this.state;
     const { items, itemType } = this.props;
 
     return(
       <div>
-        {this.renderDropdown()}
+        <Header defaultText={activeTable}
+        useDropdown
+        dropdownOptions={tableOptions}
+        dropdownOptionOnClick={this.setActiveTable}/>
         <LibraryContent>
           <Table items={items} itemType={itemType}/>
         </LibraryContent>
