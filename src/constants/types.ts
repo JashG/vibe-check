@@ -1,49 +1,50 @@
 export interface UserData {
-  country: String,
-  name: String,
-  href: String,
-  followers: Number,
-  picture: String,
-  uri: String,
+  country: string,
+  name: string,
+  href: string,
+  followers: number,
+  picture: string,
+  uri: string,
 }
 
 export interface Playlist {
-  name: String,
-  images: String[],
+  name: string,
+  images: string[],
   tracks: {
-    url: String,
-    num: Number
-  },
-  uri: String,
+    url: string,
+    num: number
+  }[],
+  uri: string,
 }
 
 export interface Artist {
-  name: String,
-  id?: String,
+  name: string,
+  id?: string,
 }
 
 export interface Album {
   artists: Artist[],
-  externalUrl: String,
+  externalUrl: string,
   images: AlbumImage[],
-  name: String,
-  releaseDate: String,
-  numTracks: Number,
+  name: string,
+  releaseDate: string,
+  numTracks: number,
 }
 
 export interface AlbumImage {
-  height: String,
-  width: String,
-  url: String,
+  height: string,
+  width: string,
+  url: string,
 }
 
 export interface Track {
-  externalUrl: String,
-  playedAt: String,
+  externalUrl: string,
+  playedAt: string,
   album: Album,
   artists: Artist[],
-  duration: Number,
-  name: String,
+  duration: number,
+  name: string,
+  id: number,
 }
 
 export interface PlayHistory {

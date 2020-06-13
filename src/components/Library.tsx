@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components'
 import { Track, Playlist } from '../constants/types';
-import Table from './tables/LibraryTable';
+import LibraryTable from './tables/LibraryTable';
 import Header from '../components/Header';
 
 const tableOptions = [
@@ -45,7 +45,7 @@ class Library extends Component<Props, any> {
         dropdownOptions={tableOptions}
         dropdownOptionOnClick={this.setActiveTable}/>
         <LibraryContent>
-          <Table items={items} itemType={itemType}/>
+          <LibraryTable items={items} itemType={itemType}/>
         </LibraryContent>
       </div>
     )

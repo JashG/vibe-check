@@ -72,6 +72,7 @@ class Profile extends Component<Props, {}> {
         this.props.setUserDataAction(userData);
       } else if (type === 'recently-played') {
         const items: [] = data.items;
+        console.log(items);
         if (items) {
           const tracks: Track[] = [];
           items.forEach(item => {
@@ -92,6 +93,7 @@ class Profile extends Component<Props, {}> {
               artists: trackData['artists'],
               duration: trackData['duration_ms'],
               name: trackData['name'],
+              id: trackData['id'],
             }
 
             tracks.push(track);

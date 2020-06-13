@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import { Table, Menu, Icon } from 'semantic-ui-react'
 import { Track, Playlist } from '../../constants/types';
 
@@ -18,17 +19,29 @@ type DefaultProps = Readonly<typeof defaultProps>
 type State = {
   currentPage: number,
   numPages: number,
+  activeCell: string, // Stores active song's ID
 }
+
+// Note: the !important tag only applies to instances of this styled component, so this
+// is a better approach than globally overriding Semantic UI's css
+const TableCellSelectable = styled(Table.Cell)`
+  padding: .4em .6em!important;
+
+  &:hover {
+    cursor: pointer;
+  }
+`
 
 class LibraryTable extends Component<Props, State> {
 
-  static defaultProps = defaultProps;
+  static defaultProps: DefaultProps = defaultProps;
 
   constructor(props: Props) {
     super(props);
     this.state = {
       currentPage: 1,
       numPages: 2,
+      activeCell: '',
     }
   }
 
@@ -38,7 +51,7 @@ class LibraryTable extends Component<Props, State> {
     if (items.length) {
       const numItems = items.length;
       this.setState({
-        numPages: this.getNumPages(numItems, perPage)
+        numPages: this.calcNumPages(numItems, perPage)
       });
     }
   }
@@ -50,13 +63,13 @@ class LibraryTable extends Component<Props, State> {
     if (items.length) {
       if (!prevItems.length || (items[0].name !== prevItems[0].name)) {
         this.setState({
-          numPages: this.getNumPages(items.length, perPage)
+          numPages: this.calcNumPages(items.length, perPage)
         })
       }
     }
   }
 
-  getNumPages = (numItems: number, perPage: number): number => {
+  calcNumPages = (numItems: number, perPage: number): number => {
     const numItemsPerPage = perPage;
     return Math.ceil(numItems / numItemsPerPage);
   }
@@ -64,32 +77,42 @@ class LibraryTable extends Component<Props, State> {
   handlePageLeftClick = () => {
     const { currentPage } = this.state;
 
-    if (currentPage === 1) return;
-
-    this.setState({
-      currentPage: currentPage - 1
-    });
+    if (currentPage !== 1) {
+      this.setState({
+        currentPage: currentPage - 1
+      });
+    }
   }
 
   handlePageRightClick = () => {
     const { currentPage, numPages } = this.state;
 
-    if (currentPage === numPages) return;
-
-    this.setState({
-      currentPage: currentPage + 1
-    });
+    if (currentPage !== numPages) {
+      this.setState({
+        currentPage: currentPage + 1
+      });
+    }
   }
 
   handlePageNumberClick = (e: any, { children }: any) => {
     const { currentPage } = this.state;
     const item: number = +children;
 
-    if (currentPage === item) return;
+    if (currentPage !== item) {
+      this.setState({
+        currentPage: item
+      });
+    }
+  }
 
-    this.setState({
-      currentPage: item
-    });
+  setActiveCell = (songId: string) => {
+    const { activeCell } = this.state;
+
+    if (songId !== activeCell) {
+      this.setState({
+        activeCell: songId
+      });
+    }
   }
 
   renderPagination = () => {
@@ -134,7 +157,7 @@ class LibraryTable extends Component<Props, State> {
   }
 
   renderTable = () => {
-    const { currentPage } = this.state;
+    const { currentPage, activeCell } = this.state;
     const { items, itemType, perPage } = this.props;
 
     const tableRows = () => {
@@ -182,10 +205,11 @@ class LibraryTable extends Component<Props, State> {
         const startIdx = (currentPage - 1) * perPage;
         const itemsToDisplay = items.slice(startIdx, startIdx + perPage);
         itemsToDisplay.forEach((item: any, index: number) => {
+          const songId = item['id'];
           rows.push((
             <React.Fragment key={index}>
               <Table.Row key={item['name']}>
-                <Table.Cell>{displaySongName(item['name'], index)}</Table.Cell>
+                <TableCellSelectable selectable active={songId === activeCell}>{displaySongName(item['name'], index)}</TableCellSelectable>
                 <Table.Cell>{displayArtistName(item['artists'], index)}</Table.Cell>
                 <Table.Cell>{item['album']['name']}</Table.Cell>
                 <Table.Cell>{item['playedAt']}</Table.Cell>
