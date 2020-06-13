@@ -36,8 +36,6 @@ app.use(cors()).use(cookie());
 
 router.get('/', (req, res) => res.send('Hello world!'));
 
-router.get('/hello', (req, res) => res.send('Hello bitch!'));
-
 router.get('/login', (req, res) => {
   const state = generateRandomString(16);
   const scopes = ['user-read-private', 'user-read-email', 'user-top-read', 'user-read-recently-played'];
