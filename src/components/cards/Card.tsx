@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components'
 
 const CardContainer = styled.div`
@@ -10,15 +10,13 @@ const CardContainer = styled.div`
 `
 
 
-class Card extends Component<any, any> {
+const Card = (props: any) => {
 
-  render() {
-    return(
-      <CardContainer>
-        {this.props.children}
-      </CardContainer>
-    )
-  }
+  return(
+    <CardContainer>
+      {props.children}
+    </CardContainer>
+  );
 
 }
 
