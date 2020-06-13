@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components'
-import { Track, Playlist } from '../constants/types';
-import LibraryTable from './tables/LibraryTable';
-import Header from '../components/Header';
+import { Track, Playlist } from '../../constants/types';
+import LibraryTable from './LibraryTable';
+import Header from '../Header';
 
 const tableOptions = [
   'Recently Played',

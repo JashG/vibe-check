@@ -3,7 +3,7 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { Switch, Route } from "react-router-dom";
 import { rootReducer } from './store/reducers/index';
-import Profile from './components/profile/Profile';
+import Profile from './components/Profile';
 import Home from './components/Home';
 
 const store = createStore(

@@ -1,19 +1,13 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import axios, { AxiosResponse } from 'axios';
-import { UserData, Playlist, Track, Album } from '../../constants/types';
-import { fetchUserData,
-  setUserData,
-  fetchUserPlaylists,
-  setUserPlaylists,
-  fetchUserRecentSongs,
-  setUserRecentSongs,
- } from '../../store/actions';
-import Card from '../cards/Card';
-import Library from '../Library';
+import React, { Component } from 'react';
+import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { connect } from 'react-redux';
+import { Album, Playlist, Track, UserData } from '../constants/types';
+import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, setUserPlaylists, setUserRecentSongs } from '../store/actions';
+import Card from './cards/Card';
+import Library from './library/Library';
 
 interface OwnProps {
   // none, as of now
