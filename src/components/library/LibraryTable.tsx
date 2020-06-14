@@ -19,16 +19,17 @@ type DefaultProps = Readonly<typeof defaultProps>
 type State = {
   currentPage: number,
   numPages: number,
-  activeCell: string, // Stores active song's ID
+  activeRow: string, // Stores active song's ID
 }
 
-// Note: the !important tag only applies to instances of this styled component, so this
+// Note: the !important tag only applies to instances of styled components, so this
 // is a better approach than globally overriding Semantic UI's css
 const TableCellSelectable = styled(Table.Cell)`
   padding: .4em .6em!important;
 
   &:hover {
     cursor: pointer;
+    background: 
   }
 `
 
@@ -41,7 +42,7 @@ class LibraryTable extends Component<Props, State> {
     this.state = {
       currentPage: 1,
       numPages: 2,
-      activeCell: '',
+      activeRow: '',
     }
   }
 
@@ -105,12 +106,12 @@ class LibraryTable extends Component<Props, State> {
     }
   }
 
-  setActiveCell = (songId: string) => {
-    const { activeCell } = this.state;
+  setActiveRow = (songId: string) => {
+    const { activeRow } = this.state;
 
-    if (songId !== activeCell) {
+    if (songId !== activeRow) {
       this.setState({
-        activeCell: songId
+        activeRow: songId
       });
     }
   }
@@ -157,7 +158,7 @@ class LibraryTable extends Component<Props, State> {
   }
 
   renderTable = () => {
-    const { currentPage, activeCell } = this.state;
+    const { currentPage, activeRow } = this.state;
     const { items, itemType, perPage } = this.props;
 
     const tableRows = () => {
@@ -205,14 +206,22 @@ class LibraryTable extends Component<Props, State> {
         const startIdx = (currentPage - 1) * perPage;
         const itemsToDisplay = items.slice(startIdx, startIdx + perPage);
         itemsToDisplay.forEach((item: any, index: number) => {
-          const songId = item['id'];
+          const songId: string = item['id'];
           rows.push((
             <React.Fragment key={index}>
-              <Table.Row key={item['name']}>
-                <TableCellSelectable selectable active={songId === activeCell}>{displaySongName(item['name'], index)}</TableCellSelectable>
-                <Table.Cell>{displayArtistName(item['artists'], index)}</Table.Cell>
-                <Table.Cell>{item['album']['name']}</Table.Cell>
-                <Table.Cell>{item['playedAt']}</Table.Cell>
+              <Table.Row key={songId + index} active={songId === activeRow}>
+                <TableCellSelectable active={songId === activeRow} onClick={this.setActiveRow.bind(this, songId)}>
+                  {displaySongName(item['name'], index)}
+                </TableCellSelectable>
+                <TableCellSelectable active={songId === activeRow} onClick={this.setActiveRow.bind(this, songId)}>
+                  {displayArtistName(item['artists'], index)}
+                </TableCellSelectable>
+                <TableCellSelectable active={songId === activeRow} onClick={this.setActiveRow.bind(this, songId)}>
+                  {item['album']['name']}
+                </TableCellSelectable>
+                <TableCellSelectable active={songId === activeRow} onClick={this.setActiveRow.bind(this, songId)}>
+                  {item['playedAt']}
+                </TableCellSelectable>
               </Table.Row>
             </React.Fragment>
           ));
@@ -232,6 +241,7 @@ class LibraryTable extends Component<Props, State> {
 
     return (
       <Table celled
+      selectable
       collapsing
       compact='very'
       style={{'border': 'none', 'width': '100%'}}>

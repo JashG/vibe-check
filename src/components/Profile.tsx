@@ -8,6 +8,7 @@ import { Album, Playlist, Track, UserData } from '../constants/types';
 import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, setUserPlaylists, setUserRecentSongs } from '../store/actions';
 import Card from './cards/Card';
 import Library from './library/Library';
+import SelectedSong from './songs/SelectedSong';
 
 interface OwnProps {
   // none, as of now
@@ -115,7 +116,7 @@ class Profile extends Component<Props, {}> {
     return(
       <Container>
         <Row>
-          <Col xs={{span: 12, order: 1}} md={{span: 9, order:1}}>
+          <Col xs={{span: 12, order: 1}} md={{span: 8, order:1}}>
             Your Library
             <Card>
               <Library title="Recently Played"
@@ -123,8 +124,11 @@ class Profile extends Component<Props, {}> {
               itemType='track'/>
             </Card>
           </Col>
-          <Col xs={{span: 9, order: 2}} md={{span: 3, order: 2}}>
+          <Col xs={{span: 9, order: 2}} md={{span: 4, order: 2}}>
             Selected Song
+            <Card>
+              <SelectedSong/>
+            </Card>
           </Col>
         </Row>
       </Container>

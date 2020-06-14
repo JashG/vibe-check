@@ -17,7 +17,18 @@ code {
     monospace;
 }
 
-/** Semantic ui styling we will override and probably need to address in a better way */
 td:first-child {
   padding-left: '';
+}
+
+.ui.table td.active, .ui.table tr.active {
+  /** This would normally take precedent over Semantic UI's CSS, but their CSS uses the !important
+  tag, so we need to as well */
+  background: #DCECFE!important;
+}
+
+.ui.selectable.table tr.active:hover, .ui.selectable.table tr:hover td.active, .ui.table tr td.selectable.active:hover {
+  /** This would normally take precedent over Semantic UI's CSS, but their CSS uses the !important
+  tag, so we need to as well */
+  background: #DCECFE!important;
 }

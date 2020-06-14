@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components'
 
 const CardContainer = styled.div`
@@ -9,8 +9,12 @@ const CardContainer = styled.div`
   box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.75);
 `
 
+type Props = {
+  children: ReactNode
+}
 
-const Card = (props: any) => {
+
+const Card = (props: Props) => {
 
   return(
     <CardContainer>

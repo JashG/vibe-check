@@ -31,7 +31,7 @@ class Library extends Component<Props, any> {
   setActiveTable = (event: any, { text }: any) => {
     this.setState({
       activeTable: text
-    })
+    });
   }
 
   render() {
