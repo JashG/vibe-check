@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { setSelectedSongFeatures } from '../../../store/actions';
 import { TrackSnippet, AudioFeatures } from '../../../constants/types';
 import SelectedSong from '../selected_song/SelectedSong';
+import { isEmptyObject } from '../../../helpers/objects';
 
 interface OwnProps {
   song: TrackSnippet
@@ -37,7 +38,7 @@ class SelectedSongContainer extends Component<Props, {}> {
   handleSongAudioFeatures = async () => {
     const { song } = this.props;
 
-    if (song) {
+    if (!isEmptyObject(song)) {
       const songId = song['id'];
       const response = await this.getSongAudioFeatures(songId);
       console.log(response);
@@ -56,7 +57,7 @@ class SelectedSongContainer extends Component<Props, {}> {
     const { song, selectedSongFeatures } = this.props;
 
     return(
-      <SelectedSong song={this.props.song}/>
+      <SelectedSong song={song} audioFeatures={selectedSongFeatures}/>
     )
   }
 
