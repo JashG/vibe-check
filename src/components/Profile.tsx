@@ -5,7 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
 import { Album, Playlist, Track, UserData } from '../constants/types';
-import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, setUserPlaylists, setUserRecentSongs, setSelectedSong } from '../store/actions';
+import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, setUserPlaylists, setUserRecentSongs, setSelectedSongId } from '../store/actions';
 import Card from './cards/Card';
 import Library from './library/Library';
 import SelectedSongContainer from './songs/selected_song/SelectedSongContainer';
@@ -28,7 +28,7 @@ interface DispatchProps {
   fetchUserPlaylistsAction: () => void,
   setUserRecentSongs: (payload: Track[]) => void,
   fetchUserRecentSongs: () => void,
-  setSelectedSong: (payload: string) => void,
+  setSelectedSongId: (payload: string) => void,
 }
 
 type Props = OwnProps & ReduxProps & DispatchProps
@@ -106,7 +106,7 @@ class Profile extends Component<Props, {}> {
     const { selectedSongId } = this.props;
 
     if (songId && songId !== selectedSongId) {
-      this.props.setSelectedSong(songId);
+      this.props.setSelectedSongId(songId);
     }
   }
 
@@ -156,7 +156,7 @@ const mapStateToProps = (state: any, ownProps?: OwnProps): ReduxProps => {
     userData: state.userData.userData,
     userPlaylists: state.userPlaylists.playlists,
     userRecentSongs: state.userRecentSongs.songs,
-    selectedSongId: state.selectedSong.song,
+    selectedSongId: state.selectedSong.songId,
   }
 }
 
@@ -168,7 +168,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps): DispatchProps =>
     fetchUserPlaylistsAction: () => dispatch(fetchUserPlaylists()),
     setUserRecentSongs: (payload: Track[]) => dispatch(setUserRecentSongs(payload)),
     fetchUserRecentSongs: () => dispatch(fetchUserRecentSongs()),
-    setSelectedSong: (payload: string) => dispatch(setSelectedSong(payload))
+    setSelectedSongId: (payload: string) => dispatch(setSelectedSongId(payload))
   }
 };
 

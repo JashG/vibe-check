@@ -7,7 +7,7 @@ import { FETCH_USER_DATA,
   SET_SELECTED_SONG_ID,
   SET_SELECTED_SONG_FEATURES,
 } from '../types';
-import { UserData, Playlist, Track } from '../../constants/types';
+import { UserData, Playlist, Track, AudioFeatures } from '../../constants/types';
 
 export function fetchUserData() {
   return {
@@ -52,5 +52,12 @@ export function setSelectedSongId(songId: string) {
   return {
     type: SET_SELECTED_SONG_ID,
     payload: songId
+  }
+}
+
+export function setSelectedSongFeatures(features: AudioFeatures) {
+  return {
+    type: SET_SELECTED_SONG_FEATURES,
+    payload: features
   }
 }

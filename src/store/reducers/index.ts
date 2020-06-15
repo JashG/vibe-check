@@ -27,7 +27,7 @@ const initialUserRecentSongs = {
 
 const initialSelectedSong = {
   songId: '' as string,
-  audioFeatures: AudioFeatures,
+  audioFeatures: {} as AudioFeatures,
 }
 
 function userDataReducer(state = initialUserData, action: {type: string; payload?: UserData; }) {
