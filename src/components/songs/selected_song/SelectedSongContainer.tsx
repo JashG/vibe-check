@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { setSelectedSongFeatures } from '../../../store/actions';
-import { AudioFeatures } from '../../../constants/types';
+import { TrackSnippet, AudioFeatures } from '../../../constants/types';
 import SelectedSong from '../selected_song/SelectedSong';
 
 interface OwnProps {
-  songId: string
+  song: TrackSnippet
 }
 
 interface ReduxProps {
@@ -26,19 +26,21 @@ class SelectedSongContainer extends Component<Props, {}> {
   }
 
   componentDidUpdate = (prevProps: Props) => {
-    const { songId } = this.props;
-    const { songId: oldSongId } = prevProps;
+    const { song } = this.props;
+    const { song: oldSong } = prevProps;
 
-    if (songId !== oldSongId) {
+    if (song['id'] !== oldSong['id']) {
       this.handleSongAudioFeatures();
     }
   }
 
   handleSongAudioFeatures = async () => {
-    const { songId } = this.props;
+    const { song } = this.props;
 
-    if (songId) {
+    if (song) {
+      const songId = song['id'];
       const response = await this.getSongAudioFeatures(songId);
+      console.log(response);
       if (response) {
         const features: AudioFeatures = response.data;
         this.props.setSelectedSongFeatures(features);
@@ -51,8 +53,10 @@ class SelectedSongContainer extends Component<Props, {}> {
   }
 
   render() {
+    const { song, selectedSongFeatures } = this.props;
+
     return(
-      <SelectedSong songId={this.props.songId}/>
+      <SelectedSong song={this.props.song}/>
     )
   }
 

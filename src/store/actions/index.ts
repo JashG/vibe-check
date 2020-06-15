@@ -4,10 +4,10 @@ import { FETCH_USER_DATA,
   SET_USER_PLAYLISTS,
   FETCH_USER_RECENT_SONGS,
   SET_USER_RECENT_SONGS,
-  SET_SELECTED_SONG_ID,
+  SET_SELECTED_SONG,
   SET_SELECTED_SONG_FEATURES,
 } from '../types';
-import { UserData, Playlist, Track, AudioFeatures } from '../../constants/types';
+import { UserData, Playlist, Track, TrackSnippet, AudioFeatures } from '../../constants/types';
 
 export function fetchUserData() {
   return {
@@ -48,10 +48,10 @@ export function setUserRecentSongs(songs: Track[]) {
   }
 }
 
-export function setSelectedSongId(songId: string) {
+export function setSelectedSong(song: TrackSnippet) {
   return {
-    type: SET_SELECTED_SONG_ID,
-    payload: songId
+    type: SET_SELECTED_SONG,
+    payload: song
   }
 }
 

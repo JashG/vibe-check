@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components'
-import { Track, Playlist } from '../../constants/types';
+import { Track, Playlist, TrackSnippet } from '../../constants/types';
 import LibraryTable from './LibraryTable';
 import Header from '../Header';
 
@@ -13,7 +13,7 @@ type Props = {
   title: string,
   items: Track[] | Playlist[],
   itemType: 'track' | 'playlist',
-  itemClickHandler: (song: string) => void, // This gets passed to LibraryTable (child) component
+  itemClickHandler: (song: TrackSnippet) => void, // This gets passed to LibraryTable (child) component
                                             // May be a better way to do this?
 }
 

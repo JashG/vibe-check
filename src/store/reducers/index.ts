@@ -5,10 +5,10 @@ import {  FETCH_USER_DATA,
           SET_USER_PLAYLISTS,
           FETCH_USER_RECENT_SONGS,
           SET_USER_RECENT_SONGS,
-          SET_SELECTED_SONG_ID,
+          SET_SELECTED_SONG,
           SET_SELECTED_SONG_FEATURES,
         } from '../types';
-import { UserData, Playlist, Track, AudioFeatures } from '../../constants/types';
+import { UserData, Playlist, Track, TrackSnippet, AudioFeatures } from '../../constants/types';
 
 const initialUserData = {
   fetching: false,
@@ -26,7 +26,7 @@ const initialUserRecentSongs = {
 }
 
 const initialSelectedSong = {
-  songId: '' as string,
+  song: {} as TrackSnippet,
   audioFeatures: {} as AudioFeatures,
 }
 
@@ -90,16 +90,13 @@ function userRecentSongsReducer(state = initialUserRecentSongs, action: {type: s
     return state;
 }
 
-function selectedSongReducer(state = initialSelectedSong, action: {type: string, payload: string | AudioFeatures }) {
+function selectedSongReducer(state = initialSelectedSong, action: {type: string, payload: TrackSnippet | AudioFeatures }) {
   switch(action.type) {
-    case SET_SELECTED_SONG_ID:
-      if (typeof action.payload === 'string') {
-        return {
-          ...state,
-          songId: action.payload
-        }
+    case SET_SELECTED_SONG:
+      return {
+        ...state,
+        song: action.payload
       }
-      break;
     
     case SET_SELECTED_SONG_FEATURES:
       return {

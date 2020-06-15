@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Table, Menu, Icon } from 'semantic-ui-react'
-import { Track, Playlist } from '../../constants/types';
+import { Track, TrackSnippet, Playlist } from '../../constants/types';
 
 const defaultProps = {
   perPage: 10
@@ -12,7 +12,7 @@ type Props = {
   items: Track[] | Playlist[],
   itemType: 'track' | 'playlist',
   perPage: number,
-  itemClickHandler: (song: string) => void,
+  itemClickHandler: (song: TrackSnippet) => void,
 }
 
 type DefaultProps = Readonly<typeof defaultProps>
@@ -206,13 +206,22 @@ class LibraryTable extends Component<Props, State> {
         const rows: React.ReactFragment[] = [];
         const startIdx = (currentPage - 1) * perPage;
         const itemsToDisplay = items.slice(startIdx, startIdx + perPage);
+
         itemsToDisplay.forEach((item: any, index: number) => {
           const songId: string = item['id'];
+          const trackSnippet: TrackSnippet = {
+            albumName: item['album']['name'],
+            albumImages: item['album']['images'],
+            artists: item['artists'],
+            name: item['name'],
+            id: songId,
+          }
+
           rows.push((
             <React.Fragment key={index}>
               <Table.Row key={songId + index}
               active={songId === activeRow}
-              onClick={itemClickHandler.bind(this, songId)}>
+              onClick={itemClickHandler.bind(this, trackSnippet)}>
                 <TableCellSelectable active={songId === activeRow} onClick={this.setActiveRow.bind(this, songId)}>
                   {displaySongName(item['name'], index)}
                 </TableCellSelectable>

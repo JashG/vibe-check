@@ -4,8 +4,8 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
-import { Album, Playlist, Track, UserData } from '../constants/types';
-import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, setUserPlaylists, setUserRecentSongs, setSelectedSongId } from '../store/actions';
+import { Album, Playlist, Track, TrackSnippet, UserData } from '../constants/types';
+import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, setUserPlaylists, setUserRecentSongs, setSelectedSong } from '../store/actions';
 import Card from './cards/Card';
 import Library from './library/Library';
 import SelectedSongContainer from './songs/selected_song/SelectedSongContainer';
@@ -18,7 +18,7 @@ interface ReduxProps {
   userData: UserData,
   userPlaylists: Playlist[],
   userRecentSongs: Track[],
-  selectedSongId: string,
+  selectedSong: TrackSnippet,
 }
 
 interface DispatchProps {
@@ -28,7 +28,7 @@ interface DispatchProps {
   fetchUserPlaylistsAction: () => void,
   setUserRecentSongs: (payload: Track[]) => void,
   fetchUserRecentSongs: () => void,
-  setSelectedSongId: (payload: string) => void,
+  setSelectedSong: (payload: TrackSnippet) => void,
 }
 
 type Props = OwnProps & ReduxProps & DispatchProps
@@ -102,11 +102,11 @@ class Profile extends Component<Props, {}> {
     });
   }
 
-  setSelectedSong = (songId: string) => {
-    const { selectedSongId } = this.props;
+  setSelectedSong = (song: TrackSnippet) => {
+    const { selectedSong } = this.props;
 
-    if (songId && songId !== selectedSongId) {
-      this.props.setSelectedSongId(songId);
+    if ((!selectedSong) || (song['id'] !== selectedSong['id'])) {
+      this.props.setSelectedSong(song);
     }
   }
 
@@ -123,7 +123,7 @@ class Profile extends Component<Props, {}> {
   }
 
   render() {
-    const { selectedSongId } = this.props;
+    const { selectedSong } = this.props;
 
     return(
       <Container>
@@ -140,7 +140,7 @@ class Profile extends Component<Props, {}> {
           <Col xs={{span: 9, order: 2}} md={{span: 4, order: 2}}>
             Selected Song
             <Card>
-              <SelectedSongContainer songId={selectedSongId}/>
+              <SelectedSongContainer song={selectedSong}/>
             </Card>
           </Col>
         </Row>
@@ -156,7 +156,7 @@ const mapStateToProps = (state: any, ownProps?: OwnProps): ReduxProps => {
     userData: state.userData.userData,
     userPlaylists: state.userPlaylists.playlists,
     userRecentSongs: state.userRecentSongs.songs,
-    selectedSongId: state.selectedSong.songId,
+    selectedSong: state.selectedSong.song,
   }
 }
 
@@ -168,7 +168,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps): DispatchProps =>
     fetchUserPlaylistsAction: () => dispatch(fetchUserPlaylists()),
     setUserRecentSongs: (payload: Track[]) => dispatch(setUserRecentSongs(payload)),
     fetchUserRecentSongs: () => dispatch(fetchUserRecentSongs()),
-    setSelectedSongId: (payload: string) => dispatch(setSelectedSongId(payload))
+    setSelectedSong: (payload: TrackSnippet) => dispatch(setSelectedSong(payload))
   }
 };
 
