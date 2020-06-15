@@ -107,6 +107,18 @@ router.get('/recently-played', (req, res) => {
   })
 });
 
+router.get('/audio-features/:songId', (req, res) => {
+  const songId = req.params.songId;
+  if (songId) {
+    spotifyApi.getAudioFeaturesForTrack(songId).then(response => {
+      response.body.responseType = 'audio-features';
+      res.send(response.body);
+    }).catch(error => {
+      res.send(error);
+    });
+  }
+});
+
 app.use('/api/', router);
 
 app.listen(PORT, () => console.log(`Example app listening at http://localhost:${PORT}`));

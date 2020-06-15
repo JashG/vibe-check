@@ -12,7 +12,9 @@ const tableOptions = [
 type Props = {
   title: string,
   items: Track[] | Playlist[],
-  itemType: 'track' | 'playlist'
+  itemType: 'track' | 'playlist',
+  itemClickHandler: (song: string) => void, // This gets passed to LibraryTable (child) component
+                                            // May be a better way to do this?
 }
 
 const LibraryContent = styled.div`
@@ -36,7 +38,7 @@ class Library extends Component<Props, any> {
 
   render() {
     const { activeTable } = this.state;
-    const { items, itemType } = this.props;
+    const { items, itemType, itemClickHandler } = this.props;
 
     return(
       <div>
@@ -45,7 +47,10 @@ class Library extends Component<Props, any> {
         dropdownOptions={tableOptions}
         dropdownOptionOnClick={this.setActiveTable}/>
         <LibraryContent>
-          <LibraryTable items={items} itemType={itemType}/>
+          <LibraryTable
+          items={items}
+          itemType={itemType}
+          itemClickHandler={itemClickHandler}/>
         </LibraryContent>
       </div>
     )

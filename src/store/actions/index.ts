@@ -3,7 +3,9 @@ import { FETCH_USER_DATA,
   FETCH_USER_PLAYLISTS,
   SET_USER_PLAYLISTS,
   FETCH_USER_RECENT_SONGS,
-  SET_USER_RECENT_SONGS
+  SET_USER_RECENT_SONGS,
+  SET_SELECTED_SONG_ID,
+  SET_SELECTED_SONG_FEATURES,
 } from '../types';
 import { UserData, Playlist, Track } from '../../constants/types';
 
@@ -43,5 +45,12 @@ export function setUserRecentSongs(songs: Track[]) {
   return {
     type: SET_USER_RECENT_SONGS,
     payload: songs
+  }
+}
+
+export function setSelectedSongId(songId: string) {
+  return {
+    type: SET_SELECTED_SONG_ID,
+    payload: songId
   }
 }

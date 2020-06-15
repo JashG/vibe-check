@@ -47,6 +47,21 @@ export interface Track {
   id: number,
 }
 
+export interface AudioFeatures { 
+  duration: number,
+  mode: number,
+  timeSignature: number,
+  acousticness: number,
+  danceability: number,
+  energy: number,
+  instrumentalness: number,
+  liveness: number,
+  loudness: number,
+  speechiness: number,
+  valence: number,
+  tempo: number,
+}
+
 export interface PlayHistory {
   track: any, // TODO make interface for track
   playedAt: any // TODO figure out how to make ISO8601 timestamp into a type

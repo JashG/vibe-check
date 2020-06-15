@@ -5,10 +5,10 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
 import { Album, Playlist, Track, UserData } from '../constants/types';
-import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, setUserPlaylists, setUserRecentSongs } from '../store/actions';
+import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, setUserPlaylists, setUserRecentSongs, setSelectedSong } from '../store/actions';
 import Card from './cards/Card';
 import Library from './library/Library';
-import SelectedSong from './songs/SelectedSong';
+import SelectedSongContainer from './songs/selected_song/SelectedSongContainer';
 
 interface OwnProps {
   // none, as of now
@@ -17,7 +17,8 @@ interface OwnProps {
 interface ReduxProps {
   userData: UserData,
   userPlaylists: Playlist[],
-  userRecentSongs: Track[]
+  userRecentSongs: Track[],
+  selectedSongId: string,
 }
 
 interface DispatchProps {
@@ -27,13 +28,14 @@ interface DispatchProps {
   fetchUserPlaylistsAction: () => void,
   setUserRecentSongs: (payload: Track[]) => void,
   fetchUserRecentSongs: () => void,
+  setSelectedSong: (payload: string) => void,
 }
 
 type Props = OwnProps & ReduxProps & DispatchProps
 
 class Profile extends Component<Props, {}> {
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.handleInitialData();
   }
 
@@ -100,6 +102,14 @@ class Profile extends Component<Props, {}> {
     });
   }
 
+  setSelectedSong = (songId: string) => {
+    const { selectedSongId } = this.props;
+
+    if (songId && songId !== selectedSongId) {
+      this.props.setSelectedSong(songId);
+    }
+  }
+
   getUserPlaylists = () => {
     return axios.get('/api/playlists');
   }
@@ -113,6 +123,8 @@ class Profile extends Component<Props, {}> {
   }
 
   render() {
+    const { selectedSongId } = this.props;
+
     return(
       <Container>
         <Row>
@@ -121,13 +133,14 @@ class Profile extends Component<Props, {}> {
             <Card>
               <Library title="Recently Played"
               items={this.props.userRecentSongs || []}
-              itemType='track'/>
+              itemType='track'
+              itemClickHandler={this.setSelectedSong}/>
             </Card>
           </Col>
           <Col xs={{span: 9, order: 2}} md={{span: 4, order: 2}}>
             Selected Song
             <Card>
-              <SelectedSong/>
+              <SelectedSongContainer songId={selectedSongId}/>
             </Card>
           </Col>
         </Row>
@@ -143,6 +156,7 @@ const mapStateToProps = (state: any, ownProps?: OwnProps): ReduxProps => {
     userData: state.userData.userData,
     userPlaylists: state.userPlaylists.playlists,
     userRecentSongs: state.userRecentSongs.songs,
+    selectedSongId: state.selectedSong.song,
   }
 }
 
@@ -154,6 +168,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps): DispatchProps =>
     fetchUserPlaylistsAction: () => dispatch(fetchUserPlaylists()),
     setUserRecentSongs: (payload: Track[]) => dispatch(setUserRecentSongs(payload)),
     fetchUserRecentSongs: () => dispatch(fetchUserRecentSongs()),
+    setSelectedSong: (payload: string) => dispatch(setSelectedSong(payload))
   }
 };
 
