@@ -44,7 +44,10 @@ const Container = styled.div`
 
 const AlbumImg = styled.img`
   height: 50px;
-  padding-right: 5px;
+  margin-right: 5px;
+  -webkit-box-shadow: 0px 0px 4px -2px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 4px -2px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 4px -2px rgba(0,0,0,0.75);
 
   @media (max-width: 768px) {
     height: 40px;

@@ -30,7 +30,7 @@ const SelectedSong = (props: Props) => {
         );
       } else {
         return (
-          <SongBio snippet={song} audioFeatures={audioFeatures}/>
+          <SongBio snippet={song}/>
         );  
       }
     }

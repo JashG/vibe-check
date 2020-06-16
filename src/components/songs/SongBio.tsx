@@ -1,10 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { TrackSnippet, AudioFeatures } from '../../constants/types';
+import { TrackSnippet } from '../../constants/types';
 
 type Props = {
   snippet: TrackSnippet,
-  audioFeatures: AudioFeatures,
 }
 
 const SongBioContainer = styled.div`
@@ -12,12 +11,15 @@ const SongBioContainer = styled.div`
   flex-direction: row;
   align-items: center;
   width: 100%;
-  padding: 5px;
+  padding: 10px;
 `
 
 const SongImage = styled.img`
   height: 75px;
-  padding-right: 8px;
+  margin-right: 8px;
+  -webkit-box-shadow: 0px 0px 6px -2px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 6px -2px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 6px -2px rgba(0,0,0,0.75);
 
   @media (min-width: 768px) and (max-width: 992px) {
     height: 60px;
@@ -30,18 +32,29 @@ const SongTextContainer = styled.div`
   overflow: hidden;
 `
 
+const SongName = styled.span`
+  font-size: 18px;
+  font-weight: 700;
+
+  @media (min-width: 768px) and (max-width: 992px) {
+    font-size: 16px;
+  }
+`
+
 const SongBio = (props: Props) => {
 
-  const { snippet: song, audioFeatures } = props;
-  const name = song['albumName'];
+  const { snippet: song } = props;
+  const songName = song['name'];
+  const albumName = song['albumName'];
   const image = song['albumImage'];
+  const artists = song['artists'];
 
   return(
     <SongBioContainer>
-      <SongImage src={image} alt={name}/>
+      <SongImage src={image} alt={albumName}/>
       <SongTextContainer>
-        <span>Song</span>
-        <span>Artist</span>
+        <SongName>{songName}</SongName>
+        <span>By: {artists[0]['name']}</span>
       </SongTextContainer>
     </SongBioContainer>
   );
