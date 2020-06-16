@@ -56,6 +56,7 @@ export interface TrackSnippet {
 }
 
 export interface AudioFeatures { 
+  [k: string]: number,
   duration: number,
   mode: number,
   timeSignature: number,

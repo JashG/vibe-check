@@ -39,6 +39,10 @@ class Profile extends Component<Props, {}> {
     this.handleInitialData();
   }
 
+  componentDidUpdate = () => {
+    console.log('update');
+  }
+
   handleInitialData = async () => {
     // Data that we need when component mounts; calls will be made in parallel
     const userDataApiCalls = [

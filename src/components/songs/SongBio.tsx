@@ -11,7 +11,7 @@ const SongBioContainer = styled.div`
   flex-direction: row;
   align-items: center;
   width: 100%;
-  padding: 10px;
+  margin-bottom: 10px;
 `
 
 const SongImage = styled.img`

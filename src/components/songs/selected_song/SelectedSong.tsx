@@ -1,9 +1,11 @@
 import React from 'react';
+import styled from 'styled-components';
 import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
 import { TrackSnippet, AudioFeatures } from '../../../constants/types';
 import Header from '../../Header';
 import SongBio from '../SongBio';
 import { isEmptyObject } from '../../../helpers/objects';
+import SongAudioFeatures from '../SongAudioFeatures';
 
 type Props = {
   song: TrackSnippet,
@@ -11,9 +13,13 @@ type Props = {
   fetchingAudioFeatures: boolean,
 }
 
+const SongDataContainer = styled.div`
+  padding: 10px;
+`
+
 const SelectedSong = (props: Props) => {
 
-  const renderSongSnippet = () => {
+  const renderSongData = () => {
     const { song, audioFeatures, fetchingAudioFeatures } = props;
 
     // If there is no selected song, render UI that shows placeholder text
@@ -40,14 +46,17 @@ const SelectedSong = (props: Props) => {
 
     // Render SongBio and SongFeatures components
     return (
-      <SongBio snippet={song}/>
+      <SongDataContainer>
+        <SongBio snippet={song}/>
+        <SongAudioFeatures audioFeatures={audioFeatures}/>
+      </SongDataContainer>
     ); 
   }
 
   return(
     <div>
       <Header defaultText='Selected Song' color={'#feecdc'}/>
-      {renderSongSnippet()}
+      {renderSongData()}
     </div>
   );
 
