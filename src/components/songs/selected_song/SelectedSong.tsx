@@ -8,43 +8,37 @@ import { isEmptyObject } from '../../../helpers/objects';
 
 type Props = {
   song: TrackSnippet,
-  audioFeatures: AudioFeatures
+  audioFeatures: AudioFeatures,
+  fetchingAudioFeatures: boolean,
 }
 
 const SelectedSong = (props: Props) => {
 
   const renderSongSnippet = () => {
-    const { song, audioFeatures } = props;
-    const haveSong = !isEmptyObject(song);
-    const haveAudioFeatures = !isEmptyObject(audioFeatures);
+    const { song, audioFeatures, fetchingAudioFeatures } = props;
 
-    if (haveSong && haveAudioFeatures) {
-      return (
-        <div>we have everything</div>
-      )
-    }
-
-    // If we have a selected song but are waiting for audio features
-    // TODO: since audio features are stored in redux, NEED to add a 'fetching' field
-    // to Redux instead of checking like this
-    if (haveSong && !haveAudioFeatures) {
+    if (!isEmptyObject(song)) {
+      if (fetchingAudioFeatures) {
+        return (
+          <Segment style={{'margin': '0'}}>
+            <Dimmer active inverted>
+              <Loader inverted>Loading</Loader>
+            </Dimmer>
+  
+            <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
+          </Segment>
+        );
+      } else {
+        return (
+          <div>we have everything</div>
+        );  
+      }
+    } else {
       return (
         <Segment style={{'margin': '0'}}>
-          <Dimmer active inverted>
-            <Loader inverted>Loading</Loader>
-          </Dimmer>
-
           <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
         </Segment>
       );
-    }
-
-    if (!haveSong) {
-      return (
-        <Segment style={{'margin': '0'}}>
-          <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
-        </Segment>
-      )
     }
   }
 

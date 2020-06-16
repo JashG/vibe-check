@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setSelectedSongFeatures } from '../../../store/actions';
+import { fetchSelectedSongFeatures, setSelectedSongFeatures } from '../../../store/actions';
 import { TrackSnippet, AudioFeatures } from '../../../constants/types';
 import SelectedSong from '../selected_song/SelectedSong';
 import { isEmptyObject } from '../../../helpers/objects';
@@ -12,9 +12,11 @@ interface OwnProps {
 
 interface ReduxProps {
   selectedSongFeatures: AudioFeatures,
+  fetching: boolean,
 }
 
 interface DispatchProps {
+  fetchSelectedSongFeatures: () => void,
   setSelectedSongFeatures: (payload: AudioFeatures) => void,
 }
 
@@ -40,11 +42,14 @@ class SelectedSongContainer extends Component<Props, {}> {
 
     if (!isEmptyObject(song)) {
       const songId = song['id'];
+      this.props.fetchSelectedSongFeatures();
       const response = await this.getSongAudioFeatures(songId);
-      console.log(response);
-      if (response) {
+
+      if (response['status'] === 200) {
         const features: AudioFeatures = response.data;
         this.props.setSelectedSongFeatures(features);
+      } else {
+        this.props.setSelectedSongFeatures({} as AudioFeatures);
       }
     }
   }
@@ -54,10 +59,12 @@ class SelectedSongContainer extends Component<Props, {}> {
   }
 
   render() {
-    const { song, selectedSongFeatures } = this.props;
+    const { song, selectedSongFeatures, fetching } = this.props;
 
     return(
-      <SelectedSong song={song} audioFeatures={selectedSongFeatures}/>
+      <SelectedSong song={song}
+      audioFeatures={selectedSongFeatures}
+      fetchingAudioFeatures={fetching}/>
     )
   }
 
@@ -67,11 +74,13 @@ class SelectedSongContainer extends Component<Props, {}> {
 const mapStateToProps = (state: any, ownProps?: OwnProps): ReduxProps => {
   return {
     selectedSongFeatures: state.selectedSong.audioFeatures,
+    fetching: state.selectedSong.fetchingAudioFeatures,
   }
 }
 
 const mapDispatchToProps = (dispatch: any, ownProps: OwnProps): DispatchProps => {
   return {
+    fetchSelectedSongFeatures: () => dispatch(fetchSelectedSongFeatures()),
     setSelectedSongFeatures: (payload: AudioFeatures) => dispatch(setSelectedSongFeatures(payload)),
   }
 };

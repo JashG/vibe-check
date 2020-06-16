@@ -137,7 +137,7 @@ class Profile extends Component<Props, {}> {
               itemClickHandler={this.setSelectedSong}/>
             </Card>
           </Col>
-          <Col xs={{span: 9, order: 2}} md={{span: 4, order: 2}}>
+          <Col xs={{span: 12, order: 2}} md={{span: 4, order: 2}}>
             Selected Song
             <Card>
               <SelectedSongContainer song={selectedSong}/>

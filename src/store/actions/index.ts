@@ -6,19 +6,20 @@ import { FETCH_USER_DATA,
   SET_USER_RECENT_SONGS,
   SET_SELECTED_SONG,
   SET_SELECTED_SONG_FEATURES,
+  FETCH_SELECTED_SONG_FEATURES,
 } from '../types';
 import { UserData, Playlist, Track, TrackSnippet, AudioFeatures } from '../../constants/types';
 
 export function fetchUserData() {
   return {
-    type: FETCH_USER_DATA
+    type: FETCH_USER_DATA,
   }
 }
 
 export function setUserData(userData: UserData) {
   return {
     type: SET_USER_DATA,
-    payload: userData
+    payload: userData,
   }
 }
 
@@ -31,7 +32,7 @@ export function fetchUserPlaylists() {
 export function setUserPlaylists(playlists: Playlist[]) {
   return {
     type: SET_USER_PLAYLISTS,
-    payload: playlists
+    payload: playlists,
   }
 }
 
@@ -44,20 +45,26 @@ export function fetchUserRecentSongs() {
 export function setUserRecentSongs(songs: Track[]) {
   return {
     type: SET_USER_RECENT_SONGS,
-    payload: songs
+    payload: songs,
   }
 }
 
 export function setSelectedSong(song: TrackSnippet) {
   return {
     type: SET_SELECTED_SONG,
-    payload: song
+    payload: song,
+  }
+}
+
+export function fetchSelectedSongFeatures() {
+  return {
+    type: FETCH_SELECTED_SONG_FEATURES,
   }
 }
 
 export function setSelectedSongFeatures(features: AudioFeatures) {
   return {
     type: SET_SELECTED_SONG_FEATURES,
-    payload: features
+    payload: features,
   }
 }

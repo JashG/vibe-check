@@ -18,7 +18,8 @@ type Props = {
 }
 
 const LibraryContent = styled.div`
-  // height: 300px;
+  display: flex;
+  overflow: auto;
 `
 
 class Library extends Component<Props, any> {

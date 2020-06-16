@@ -7,6 +7,7 @@ import {  FETCH_USER_DATA,
           SET_USER_RECENT_SONGS,
           SET_SELECTED_SONG,
           SET_SELECTED_SONG_FEATURES,
+          FETCH_SELECTED_SONG_FEATURES,
         } from '../types';
 import { UserData, Playlist, Track, TrackSnippet, AudioFeatures } from '../../constants/types';
 
@@ -27,6 +28,7 @@ const initialUserRecentSongs = {
 
 const initialSelectedSong = {
   song: {} as TrackSnippet,
+  fetchingAudioFeatures: false,
   audioFeatures: {} as AudioFeatures,
 }
 
@@ -98,10 +100,18 @@ function selectedSongReducer(state = initialSelectedSong, action: {type: string,
         song: action.payload
       }
     
+    case FETCH_SELECTED_SONG_FEATURES:
+      return {
+        ...state,
+        audioFeatures: {},
+        fetchingAudioFeatures: true,
+      }
+    
     case SET_SELECTED_SONG_FEATURES:
       return {
         ...state,
-        audioFeatures: action.payload
+        audioFeatures: action.payload,
+        fetchingAudioFeatures: false,
       }
   }
 

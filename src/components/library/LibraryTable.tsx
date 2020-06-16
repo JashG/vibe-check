@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Table, Menu, Icon } from 'semantic-ui-react'
-import { Track, TrackSnippet, Playlist } from '../../constants/types';
+import { AlbumImage, Track, TrackSnippet, Playlist } from '../../constants/types';
 
 const defaultProps = {
   perPage: 10
@@ -23,8 +23,6 @@ type State = {
   activeRow: string, // Stores active song's ID
 }
 
-// Note: the !important tag only applies to instances of styled components, so this
-// is a better approach than globally overriding Semantic UI's css
 const TableCellSelectable = styled(Table.Cell)`
   padding: .4em .6em!important;
 
@@ -33,6 +31,35 @@ const TableCellSelectable = styled(Table.Cell)`
     background: 
   }
 `
+
+type DisplayAlbumProps = {
+  img: string,
+  name: string,
+}
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const AlbumImg = styled.img`
+  height: 50px;
+  padding-right: 5px;
+
+  @media (max-width: 768px) {
+    height: 40px;
+  }
+`
+
+const DisplayAlbum = (props: DisplayAlbumProps) => {
+
+  return (
+    <Container>
+      <AlbumImg src={props.img} alt={props.name} />
+      <span>{props.name}</span>
+    </Container>
+  );
+}
 
 class LibraryTable extends Component<Props, State> {
 
@@ -209,9 +236,16 @@ class LibraryTable extends Component<Props, State> {
 
         itemsToDisplay.forEach((item: any, index: number) => {
           const songId: string = item['id'];
+          const albumName: string = item['album']['name'];
+          const albumImages: AlbumImage[] = item['album']['images'];
+          let albumImg = '';
+          if (albumImages.length) {
+            albumImg = albumImages[albumImages.length - 1]['url'];
+          }
+
           const trackSnippet: TrackSnippet = {
-            albumName: item['album']['name'],
-            albumImages: item['album']['images'],
+            albumName: albumName,
+            albumImages: albumImages,
             artists: item['artists'],
             name: item['name'],
             id: songId,
@@ -229,7 +263,7 @@ class LibraryTable extends Component<Props, State> {
                   {displayArtistName(item['artists'], index)}
                 </TableCellSelectable>
                 <TableCellSelectable active={songId === activeRow} onClick={this.setActiveRow.bind(this, songId)}>
-                  {item['album']['name']}
+                  <DisplayAlbum name={albumName} img={albumImg}/>
                 </TableCellSelectable>
                 <TableCellSelectable active={songId === activeRow} onClick={this.setActiveRow.bind(this, songId)}>
                   {item['playedAt']}
@@ -256,6 +290,7 @@ class LibraryTable extends Component<Props, State> {
       selectable
       collapsing
       compact='very'
+      unstackable
       style={{'border': 'none', 'width': '100%'}}>
         <Table.Header>
           <Table.Row>
