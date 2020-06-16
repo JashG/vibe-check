@@ -30,16 +30,17 @@ const SelectedSong = (props: Props) => {
         );
       } else {
         return (
-          <div>we have everything</div>
+          <SongBio snippet={song} audioFeatures={audioFeatures}/>
         );  
       }
-    } else {
-      return (
-        <Segment style={{'margin': '0'}}>
-          <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
-        </Segment>
-      );
     }
+
+    // UI that shows placeholder text
+    return (
+      <Segment style={{'margin': '0'}}>
+        <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
+      </Segment>
+    );
   }
 
   return(

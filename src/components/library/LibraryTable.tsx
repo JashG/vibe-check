@@ -192,16 +192,14 @@ class LibraryTable extends Component<Props, State> {
     const tableRows = () => {
       if (itemType === 'track') {
         const displaySongName = (name: string, fragmentKey: number) => {
-          const items: React.ReactFragment[] = [];
-          if (name) {
-            items.push(
-              <span key={name}>{name}</span>
-            );
-          }
+          // If song name includes featured artists (ex: '(feat. <artists>)'),
+          // remove that part
+          let songNameSplit = name.split('(feat.');
+          const songName = songNameSplit[0];
 
           return (
             <React.Fragment key={fragmentKey}>
-              {items}
+              <span key={name}>{songName}</span>
             </React.Fragment>
           );
         }
@@ -239,13 +237,15 @@ class LibraryTable extends Component<Props, State> {
           const albumName: string = item['album']['name'];
           const albumImages: AlbumImage[] = item['album']['images'];
           let albumImg = '';
-          if (albumImages.length) {
-            albumImg = albumImages[albumImages.length - 1]['url'];
+          if (albumImages.length > 1) {
+            albumImg = albumImages[1]['url'];
+          } else if (albumImages.length === 1) {
+            albumImg = albumImages[0]['url'];
           }
 
           const trackSnippet: TrackSnippet = {
             albumName: albumName,
-            albumImages: albumImages,
+            albumImage: albumImg,
             artists: item['artists'],
             name: item['name'],
             id: songId,

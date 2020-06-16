@@ -49,7 +49,7 @@ export interface Track {
 
 export interface TrackSnippet {
   albumName: string,
-  albumImages: AlbumImage[],
+  albumImage: string,
   artists: Artist[],
   name: string,
   id: string,
