@@ -6,23 +6,26 @@ type Props = {
   min: number,
   max: number,
   value: number,
-  // color: string,
 }
 
 type ValueBarProps = {
   percentFill: number,
 }
 
+const FeatureName = styled.span`
+  text-transform: capitalize;
+`
+
 const ValueBar = styled.div`
   height: 18px;
   width: 100%;
-  border: 2px solid black;
-  border-radius: 4px;
+  border: 2px solid rgba(0,0,0,0.08);
+  border-radius: 6px;
 
   > div {
     height: 100%;
     width: ${(props: ValueBarProps) => (props.percentFill + '%')};
-    background-color: black;
+    background-color: #DCECFE;
   }
 `
 
@@ -38,10 +41,15 @@ const AudioFeature = (props: Props) => {
     return 0;
   }
 
+  const { name } = props;
+
   return(
-    <ValueBar percentFill={getPercentFill()}>
-      <div></div>
-    </ValueBar>
+    <div>
+      <FeatureName>{name}</FeatureName>
+      <ValueBar percentFill={getPercentFill()}>
+        <div></div>
+      </ValueBar>
+    </div>
   );
 
 }
