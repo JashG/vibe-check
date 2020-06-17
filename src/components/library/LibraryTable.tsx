@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Table, Menu, Icon } from 'semantic-ui-react'
+import { Table, Menu, Icon, Checkbox } from 'semantic-ui-react'
 import { AlbumImage, Track, TrackSnippet, Playlist } from '../../constants/types';
 
 const defaultProps = {
@@ -119,7 +119,7 @@ class LibraryTable extends Component<Props, State> {
   handlePageRightClick = () => {
     const { currentPage, numPages } = this.state;
 
-    if (currentPage !== numPages) {
+    if (currentPage !== numPages) { 
       this.setState({
         currentPage: currentPage + 1
       });
@@ -259,6 +259,9 @@ class LibraryTable extends Component<Props, State> {
               <Table.Row key={songId + index}
               active={songId === activeRow}
               onClick={itemClickHandler.bind(this, trackSnippet)}>
+                <Table.Cell collapsing>
+                  <Checkbox />
+                </Table.Cell>
                 <TableCellSelectable active={songId === activeRow} onClick={this.setActiveRow.bind(this, songId)}>
                   {displaySongName(item['name'], index)}
                 </TableCellSelectable>
@@ -297,6 +300,7 @@ class LibraryTable extends Component<Props, State> {
       style={{'border': 'none', 'width': '100%'}}>
         <Table.Header>
           <Table.Row>
+            <Table.HeaderCell>Select</Table.HeaderCell>
             <Table.HeaderCell>Song</Table.HeaderCell>
             <Table.HeaderCell>Artist</Table.HeaderCell>
             <Table.HeaderCell>Album</Table.HeaderCell>

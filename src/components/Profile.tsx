@@ -9,6 +9,7 @@ import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, s
 import Card from './cards/Card';
 import Library from './library/Library';
 import SelectedSongContainer from './songs/selected_song/SelectedSongContainer';
+import SearchBar from './SearchBar';
 
 interface OwnProps {
   // none, as of now
@@ -130,10 +131,15 @@ class Profile extends Component<Props, {}> {
     const { selectedSong } = this.props;
 
     return(
-      <Container>
+      <Container style={{'marginTop': '10px'}}>
         <Row>
           <Col xs={{span: 12, order: 1}} md={{span: 8, order:1}}>
-            Your Library
+            <SearchBar song={selectedSong}/>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col xs={{span: 12, order: 1}} md={{span: 8, order:1}}>
             <Card>
               <Library title="Recently Played"
               items={this.props.userRecentSongs || []}
@@ -142,7 +148,6 @@ class Profile extends Component<Props, {}> {
             </Card>
           </Col>
           <Col xs={{span: 12, order: 2}} md={{span: 4, order: 2}}>
-            Selected Song
             <Card>
               <SelectedSongContainer song={selectedSong}/>
             </Card>

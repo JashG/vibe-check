@@ -47,7 +47,7 @@ const SelectedSong = (props: Props) => {
     // Render SongBio and SongFeatures components
     return (
       <SongDataContainer>
-        <SongBio snippet={song}/>
+        <SongBio song={song}/>
         <SongAudioFeatures audioFeatures={audioFeatures}/>
       </SongDataContainer>
     ); 
@@ -55,7 +55,7 @@ const SelectedSong = (props: Props) => {
 
   return(
     <div>
-      <Header defaultText='Selected Song' color={'#feecdc'}/>
+      <Header defaultText='Song Audio Features' color={'#feecdc'}/>
       {renderSongData()}
     </div>
   );

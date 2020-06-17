@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { TrackSnippet } from '../../constants/types';
 
 type Props = {
-  snippet: TrackSnippet,
+  song: TrackSnippet,
 }
 
 const SongBioContainer = styled.div`
@@ -43,7 +43,7 @@ const SongName = styled.span`
 
 const SongBio = (props: Props) => {
 
-  const { snippet: song } = props;
+  const { song } = props;
   const songName = song['name'];
   const albumName = song['albumName'];
   const image = song['albumImage'];

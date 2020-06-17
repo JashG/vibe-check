@@ -30,6 +30,7 @@ const ValueBar = styled.div`
     height: 100%;
     width: ${(props: PercentProps) => (props.percentFill + '%')};
     background-color: #DCECFE;
+    // background-color: #FEECDC;
   }
 `
 
@@ -43,6 +44,7 @@ const Value = styled.span`
   font-size: 12px;
   border-radius: 3px;
   background-color: #DCECFE;
+  // background-color: #FEECDC;
 `
 
 const AudioFeature = (props: Props) => {
