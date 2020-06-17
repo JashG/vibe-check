@@ -7,6 +7,7 @@ import { FETCH_USER_DATA,
   SET_SELECTED_SONG,
   SET_SELECTED_SONG_FEATURES,
   FETCH_SELECTED_SONG_FEATURES,
+  ADD_SELECTED_SONG_TO_CACHE,
 } from '../types';
 import { UserData, Playlist, Track, TrackSnippet, AudioFeatures } from '../../constants/types';
 
@@ -66,5 +67,15 @@ export function setSelectedSongFeatures(features: AudioFeatures) {
   return {
     type: SET_SELECTED_SONG_FEATURES,
     payload: features,
+  }
+}
+
+export function addSelectedSongToCache(song: TrackSnippet, features: AudioFeatures) {
+  return {
+    type: ADD_SELECTED_SONG_TO_CACHE,
+    payload: {
+      song: song,
+      audioFeatures: features
+    }
   }
 }

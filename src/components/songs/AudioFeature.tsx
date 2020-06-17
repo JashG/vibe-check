@@ -12,6 +12,10 @@ type PercentProps = {
   percentFill: number,
 }
 
+const FeatureContainer = styled.div`
+  height: 60px;
+`
+
 const FeatureName = styled.span`
   text-transform: capitalize;
 `
@@ -29,8 +33,16 @@ const ValueBar = styled.div`
   }
 `
 
-const ValueTooltip = styled.div`
-  margin-left: ${(props: PercentProps) => (props.percentFill + '%')};
+const ValueContainer = styled.div`
+  margin-top: 5px;
+  margin-left: ${(props: PercentProps) => (props.percentFill < 92 ? props.percentFill + '%' : '92%')};
+`
+
+const Value = styled.span`
+  padding: 2px 4px 2px 4px;
+  font-size: 12px;
+  border-radius: 3px;
+  background-color: #DCECFE;
 `
 
 const AudioFeature = (props: Props) => {
@@ -45,16 +57,22 @@ const AudioFeature = (props: Props) => {
     return 0;
   }
 
+  const getValueRounded = (val: number) => {
+    return val.toFixed(2);
+  }
+
   const { name, value } = props;
 
   return(
-    <div>
+    <FeatureContainer>
       <FeatureName>{name}</FeatureName>
       <ValueBar percentFill={getPercentFill()}>
         <div/>
-        <ValueTooltip percentFill={getPercentFill()}>{value}</ValueTooltip>
+        <ValueContainer percentFill={getPercentFill()}>
+          <Value>{getValueRounded(value)}</Value>
+        </ValueContainer>
       </ValueBar>
-    </div>
+    </FeatureContainer>
   );
 
 }

@@ -8,6 +8,7 @@ import {  FETCH_USER_DATA,
           SET_SELECTED_SONG,
           SET_SELECTED_SONG_FEATURES,
           FETCH_SELECTED_SONG_FEATURES,
+          ADD_SELECTED_SONG_TO_CACHE,
         } from '../types';
 import { UserData, Playlist, Track, TrackSnippet, AudioFeatures } from '../../constants/types';
 
@@ -30,6 +31,13 @@ const initialSelectedSong = {
   song: {} as TrackSnippet,
   fetchingAudioFeatures: false,
   audioFeatures: {} as AudioFeatures,
+}
+
+const initialSelectedSongCache = {
+  songs: [] as {
+    song: TrackSnippet,
+    audioFeatures: AudioFeatures
+  }[]
 }
 
 function userDataReducer(state = initialUserData, action: {type: string; payload?: UserData; }) {
@@ -118,9 +126,25 @@ function selectedSongReducer(state = initialSelectedSong, action: {type: string,
   return state;
 }
 
+function selectedSongCacheReducer(
+  state = initialSelectedSongCache,
+  action: {type: string, payload: {song: TrackSnippet, audioFeatures: AudioFeatures}}
+) {
+  switch(action.type) {
+    case ADD_SELECTED_SONG_TO_CACHE:
+      return {
+        songs: [...state.songs, action.payload]
+      }
+    }
+
+  return state;
+}
+
+
 export const rootReducer = combineReducers({
   userData: userDataReducer,
   userPlaylists: userPlaylistsReducer,
   userRecentSongs: userRecentSongsReducer,
   selectedSong: selectedSongReducer,
+  selectedSongCache: selectedSongCacheReducer,
 });

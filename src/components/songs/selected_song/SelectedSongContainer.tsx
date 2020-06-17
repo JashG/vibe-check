@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { fetchSelectedSongFeatures, setSelectedSongFeatures } from '../../../store/actions';
+import { fetchSelectedSongFeatures, setSelectedSongFeatures, addSelectedSongToCache } from '../../../store/actions';
 import { TrackSnippet, AudioFeatures } from '../../../constants/types';
 import SelectedSong from '../selected_song/SelectedSong';
 import { isEmptyObject } from '../../../helpers/objects';
@@ -11,13 +11,15 @@ interface OwnProps {
 }
 
 interface ReduxProps {
-  selectedSongFeatures: AudioFeatures,
+  audioFeatures: AudioFeatures,
   fetching: boolean,
+  songCache: {song: TrackSnippet, audioFeatures: AudioFeatures}[]
 }
 
 interface DispatchProps {
   fetchSelectedSongFeatures: () => void,
   setSelectedSongFeatures: (payload: AudioFeatures) => void,
+  addSelectedSongToCache: (payload: {song: TrackSnippet, audioFeatures: AudioFeatures}) => void,
 }
 
 type Props = OwnProps & ReduxProps & DispatchProps;
@@ -42,16 +44,38 @@ class SelectedSongContainer extends Component<Props, {}> {
 
     if (!isEmptyObject(song)) {
       const songId = song['id'];
-      this.props.fetchSelectedSongFeatures();
-      const response = await this.getSongAudioFeatures(songId);
+      const existingSong = this.getSongFromCache(songId);
 
-      if (response['status'] === 200) {
-        const features: AudioFeatures = response.data;
-        this.props.setSelectedSongFeatures(features);
+      // Check Redux cache to see if we already have this song's audio features
+      if (existingSong) {
+        const audioFeatures = existingSong['audioFeatures'];
+        this.props.setSelectedSongFeatures(audioFeatures);
       } else {
-        this.props.setSelectedSongFeatures({} as AudioFeatures);
+        this.props.fetchSelectedSongFeatures();
+        const response = await this.getSongAudioFeatures(songId);
+
+        if (response['status'] === 200) {
+          const features: AudioFeatures = response.data;
+          this.props.setSelectedSongFeatures(features);
+          this.props.addSelectedSongToCache({song: song, audioFeatures: features});
+        } else {
+          this.props.setSelectedSongFeatures({} as AudioFeatures);
+        }
       }
     }
+  }
+
+  getSongFromCache = (songId: string): {song: TrackSnippet, audioFeatures: AudioFeatures} | undefined => {
+    const { songCache } = this.props;
+
+    const existingSong = songCache.find(song => {
+      const id = song['song']['id'];
+      if (songId === id) {
+        return song;
+      }
+    })
+
+    return existingSong;
   }
 
   getSongAudioFeatures = (songId: string) => {
@@ -59,11 +83,11 @@ class SelectedSongContainer extends Component<Props, {}> {
   }
 
   render() {
-    const { song, selectedSongFeatures, fetching } = this.props;
+    const { song, audioFeatures, fetching } = this.props;
 
     return(
       <SelectedSong song={song}
-      audioFeatures={selectedSongFeatures}
+      audioFeatures={audioFeatures}
       fetchingAudioFeatures={fetching}/>
     )
   }
@@ -73,8 +97,9 @@ class SelectedSongContainer extends Component<Props, {}> {
 // Note: Type of 'state' should be interface for Redux state
 const mapStateToProps = (state: any, ownProps?: OwnProps): ReduxProps => {
   return {
-    selectedSongFeatures: state.selectedSong.audioFeatures,
+    audioFeatures: state.selectedSong.audioFeatures,
     fetching: state.selectedSong.fetchingAudioFeatures,
+    songCache: state.selectedSongCache.songs,
   }
 }
 
@@ -82,6 +107,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps): DispatchProps =>
   return {
     fetchSelectedSongFeatures: () => dispatch(fetchSelectedSongFeatures()),
     setSelectedSongFeatures: (payload: AudioFeatures) => dispatch(setSelectedSongFeatures(payload)),
+    addSelectedSongToCache: (payload: {song: TrackSnippet, audioFeatures: AudioFeatures}) => dispatch(addSelectedSongToCache(payload.song, payload.audioFeatures)),
   }
 };
 
