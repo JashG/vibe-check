@@ -4,12 +4,11 @@ import { FETCH_USER_DATA,
   SET_USER_PLAYLISTS,
   FETCH_USER_RECENT_SONGS,
   SET_USER_RECENT_SONGS,
-  SET_SELECTED_SONG,
-  SET_SELECTED_SONG_FEATURES,
-  FETCH_SELECTED_SONG_FEATURES,
-  ADD_SELECTED_SONG_TO_CACHE,
+  ADD_SELECTED_SONG,
+  ADD_SONG_TO_CACHE,
+  REMOVE_SELECTED_SONG,
 } from '../types';
-import { UserData, Playlist, Track, TrackSnippet, AudioFeatures } from '../../constants/types';
+import { UserData, Playlist, Track, TrackAndAudio } from '../../constants/types';
 
 export function fetchUserData() {
   return {
@@ -50,32 +49,23 @@ export function setUserRecentSongs(songs: Track[]) {
   }
 }
 
-export function setSelectedSong(song: TrackSnippet) {
+export function addSelectedSong(song: TrackAndAudio) {
   return {
-    type: SET_SELECTED_SONG,
+    type: ADD_SELECTED_SONG,
     payload: song,
   }
 }
 
-export function fetchSelectedSongFeatures() {
+export function removeSelectedSong(songId: string) {
   return {
-    type: FETCH_SELECTED_SONG_FEATURES,
+    type: REMOVE_SELECTED_SONG,
+    payload: songId,
   }
 }
 
-export function setSelectedSongFeatures(features: AudioFeatures) {
+export function addSongToCache(song: TrackAndAudio) {
   return {
-    type: SET_SELECTED_SONG_FEATURES,
-    payload: features,
-  }
-}
-
-export function addSelectedSongToCache(song: TrackSnippet, features: AudioFeatures) {
-  return {
-    type: ADD_SELECTED_SONG_TO_CACHE,
-    payload: {
-      song: song,
-      audioFeatures: features
-    }
+    type: ADD_SONG_TO_CACHE,
+    payload: song,
   }
 }

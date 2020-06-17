@@ -13,8 +13,8 @@ type Props = {
   title: string,
   items: Track[] | Playlist[],
   itemType: 'track' | 'playlist',
-  itemClickHandler: (song: TrackSnippet) => void, // This gets passed to LibraryTable (child) component
-                                            // May be a better way to do this?
+  rowClickHandler: (song: TrackSnippet) => void,
+  itemSelectHandler: (song: TrackSnippet) => void,
 }
 
 const LibraryContent = styled.div`
@@ -39,7 +39,7 @@ class Library extends Component<Props, any> {
 
   render() {
     const { activeTable } = this.state;
-    const { items, itemType, itemClickHandler } = this.props;
+    const { items, itemType, rowClickHandler, itemSelectHandler } = this.props;
 
     return(
       <div>
@@ -51,7 +51,8 @@ class Library extends Component<Props, any> {
           <LibraryTable
           items={items}
           itemType={itemType}
-          itemClickHandler={itemClickHandler}/>
+          rowClickHandler={rowClickHandler}
+          itemSelectHandler={itemSelectHandler}/>
         </LibraryContent>
       </div>
     )

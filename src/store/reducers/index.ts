@@ -5,12 +5,11 @@ import {  FETCH_USER_DATA,
           SET_USER_PLAYLISTS,
           FETCH_USER_RECENT_SONGS,
           SET_USER_RECENT_SONGS,
-          SET_SELECTED_SONG,
-          SET_SELECTED_SONG_FEATURES,
-          FETCH_SELECTED_SONG_FEATURES,
-          ADD_SELECTED_SONG_TO_CACHE,
+          ADD_SELECTED_SONG,
+          REMOVE_SELECTED_SONG,
+          ADD_SONG_TO_CACHE,
         } from '../types';
-import { UserData, Playlist, Track, TrackSnippet, AudioFeatures } from '../../constants/types';
+import { UserData, Playlist, Track, TrackAndAudio } from '../../constants/types';
 
 const initialUserData = {
   fetching: false,
@@ -27,17 +26,14 @@ const initialUserRecentSongs = {
   songs: [] as Track[],
 }
 
-const initialSelectedSong = {
-  song: {} as TrackSnippet,
-  fetchingAudioFeatures: false,
-  audioFeatures: {} as AudioFeatures,
+const initialSelectedSongs = {
+  songs: [] as TrackAndAudio[],
 }
 
-const initialSelectedSongCache = {
-  songs: [] as {
-    song: TrackSnippet,
-    audioFeatures: AudioFeatures
-  }[]
+// Caches songs' audio features so we don't have to fetch them each time a user
+// clicks on a song
+const songAudioFeaturesCache = {
+  songs: [] as TrackAndAudio[],
 }
 
 function userDataReducer(state = initialUserData, action: {type: string; payload?: UserData; }) {
@@ -100,38 +96,26 @@ function userRecentSongsReducer(state = initialUserRecentSongs, action: {type: s
     return state;
 }
 
-function selectedSongReducer(state = initialSelectedSong, action: {type: string, payload: TrackSnippet | AudioFeatures }) {
+function selectedSongsReducer(state = initialSelectedSongs, action: {type: string, payload: TrackAndAudio | string }) {
   switch(action.type) {
-    case SET_SELECTED_SONG:
+    case ADD_SELECTED_SONG:
       return {
-        ...state,
-        song: action.payload
+        songs: [...state.songs, action.payload]
       }
-    
-    case FETCH_SELECTED_SONG_FEATURES:
+
+    case REMOVE_SELECTED_SONG:
       return {
-        ...state,
-        audioFeatures: {},
-        fetchingAudioFeatures: true,
+        songs: state.songs.filter((song: TrackAndAudio) => song.song.id !== action.payload)
       }
-    
-    case SET_SELECTED_SONG_FEATURES:
-      return {
-        ...state,
-        audioFeatures: action.payload,
-        fetchingAudioFeatures: false,
-      }
+
   }
 
   return state;
 }
 
-function selectedSongCacheReducer(
-  state = initialSelectedSongCache,
-  action: {type: string, payload: {song: TrackSnippet, audioFeatures: AudioFeatures}}
-) {
+function audioFeaturesCacheReducer(state = songAudioFeaturesCache, action: {type: string, payload: TrackAndAudio }) {
   switch(action.type) {
-    case ADD_SELECTED_SONG_TO_CACHE:
+    case ADD_SONG_TO_CACHE:
       return {
         songs: [...state.songs, action.payload]
       }
@@ -145,6 +129,6 @@ export const rootReducer = combineReducers({
   userData: userDataReducer,
   userPlaylists: userPlaylistsReducer,
   userRecentSongs: userRecentSongsReducer,
-  selectedSong: selectedSongReducer,
-  selectedSongCache: selectedSongCacheReducer,
+  selectedSongs: selectedSongsReducer,
+  songCache: audioFeaturesCacheReducer,
 });

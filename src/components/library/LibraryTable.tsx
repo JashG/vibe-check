@@ -12,7 +12,8 @@ type Props = {
   items: Track[] | Playlist[],
   itemType: 'track' | 'playlist',
   perPage: number,
-  itemClickHandler: (song: TrackSnippet) => void,
+  rowClickHandler: (song: TrackSnippet) => void,
+  itemSelectHandler: (song: TrackSnippet) => void,
 }
 
 type DefaultProps = Readonly<typeof defaultProps>
@@ -190,7 +191,7 @@ class LibraryTable extends Component<Props, State> {
 
   renderTable = () => {
     const { currentPage, activeRow } = this.state;
-    const { items, itemType, perPage, itemClickHandler } = this.props;
+    const { items, itemType, perPage, rowClickHandler, itemSelectHandler } = this.props;
 
     const tableRows = () => {
       if (itemType === 'track') {
@@ -258,8 +259,8 @@ class LibraryTable extends Component<Props, State> {
             <React.Fragment key={index}>
               <Table.Row key={songId + index}
               active={songId === activeRow}
-              onClick={itemClickHandler.bind(this, trackSnippet)}>
-                <Table.Cell collapsing>
+              onClick={rowClickHandler.bind(this, trackSnippet)}>
+                <Table.Cell collapsing onClick={itemSelectHandler.bind(this, trackSnippet)}>
                   <Checkbox />
                 </Table.Cell>
                 <TableCellSelectable active={songId === activeRow} onClick={this.setActiveRow.bind(this, songId)}>

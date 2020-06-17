@@ -4,12 +4,15 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
-import { Album, Playlist, Track, TrackSnippet, UserData } from '../constants/types';
-import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, setUserPlaylists, setUserRecentSongs, setSelectedSong } from '../store/actions';
+import { Album, Playlist, Track, TrackSnippet, UserData, TrackAndAudio, AudioFeatures } from '../constants/types';
+import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, setUserPlaylists, setUserRecentSongs, addSelectedSong, removeSelectedSong, addSongToCache } from '../store/actions';
 import Card from './cards/Card';
 import Library from './library/Library';
-import SelectedSongContainer from './songs/selected_song/SelectedSongContainer';
-import SearchBar from './SearchBar';
+// import SelectedSongContainer from './songs/selected_song/SelectedSongContainer';
+// import SearchBar from './SearchBar';
+
+// Maximum number of songs user can select before searching for new music
+const MAX_SELECTED_SONGS = 5;
 
 interface OwnProps {
   // none, as of now
@@ -19,7 +22,8 @@ interface ReduxProps {
   userData: UserData,
   userPlaylists: Playlist[],
   userRecentSongs: Track[],
-  selectedSong: TrackSnippet,
+  selectedSongs: TrackAndAudio[],
+  songCache: TrackAndAudio[],
 }
 
 interface DispatchProps {
@@ -29,19 +33,30 @@ interface DispatchProps {
   fetchUserPlaylistsAction: () => void,
   setUserRecentSongs: (payload: Track[]) => void,
   fetchUserRecentSongs: () => void,
-  setSelectedSong: (payload: TrackSnippet) => void,
+  addSelectedSong: (payload: TrackAndAudio) => void,
+  removeSelectedSong: (payload: string) => void,
+  addSongToCache: (payload: TrackAndAudio) => void,
 }
 
 type Props = OwnProps & ReduxProps & DispatchProps
 
-class Profile extends Component<Props, {}> {
+type State = {
+  activeSong: TrackAndAudio | undefined, // Song that the user has clicked to view more information
+  fetchingAudioFeatures: boolean,
+}
+
+class Profile extends Component<Props, State> {
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      activeSong: undefined,
+      fetchingAudioFeatures: false,
+    }
+  }
 
   componentDidMount = () => {
     this.handleInitialData();
-  }
-
-  componentDidUpdate = () => {
-    console.log('update');
   }
 
   handleInitialData = async () => {
@@ -107,12 +122,95 @@ class Profile extends Component<Props, {}> {
     });
   }
 
-  setSelectedSong = (song: TrackSnippet) => {
-    const { selectedSong } = this.props;
+  setActiveSong = (song: TrackSnippet) => {
+    const { activeSong } = this.state;
+    const songId = song['id'];
 
-    if ((!selectedSong) || (song['id'] !== selectedSong['id'])) {
-      this.props.setSelectedSong(song);
+    if ((!activeSong) || (activeSong['song']['id'] !== songId)) {
+      // Check Redux cache to see if we already have this song's audio features
+      // If not, we'll make an API request to retrieve them
+      const existingSongData = this.getSongFromCache(songId);
+
+      if (existingSongData) {
+        this.setState({
+          activeSong: existingSongData
+        });
+      } else {
+        this.setState({
+          fetchingAudioFeatures: true
+        });
+
+        this.handleFetchingSongAudioFeatures(songId).then(audioFeatures => {
+          if (audioFeatures) {
+            const songData: TrackAndAudio = {
+              song: song,
+              audioFeatures: audioFeatures
+            }
+            this.setState({activeSong: songData});
+            this.props.addSongToCache(songData);
+          }
+        });
+      }
     }
+  }
+
+  addOrRemoveSelectedSong = (song: TrackSnippet) => {
+    const { selectedSongs } = this.props;
+
+    // First, check if we are trying to remove this song
+    const songId = song['id'];
+    const matchingSongIds = selectedSongs.filter(s => s['song']['id'] === songId);
+  
+    if (matchingSongIds.length > 0) {
+      this.props.removeSelectedSong(songId);
+    } else {
+      // If we are trying to add this song to our list of selected songs,
+      // first ensure that we haven't reached our limit for number of songs
+      if (selectedSongs.length >= MAX_SELECTED_SONGS) return;
+
+      // Now, we need to retrieve its TrackAndAudio representation from either 
+      // Redux cache or via API call
+      const existingSongData = this.getSongFromCache(songId);
+  
+      if (existingSongData) {
+        this.props.addSelectedSong(existingSongData);
+      } else {
+        this.handleFetchingSongAudioFeatures(songId).then(audioFeatures => {
+          if (audioFeatures) {
+            const songData: TrackAndAudio = {
+              song: song,
+              audioFeatures: audioFeatures
+            }
+            this.props.addSelectedSong(songData);
+            this.props.addSongToCache(songData);
+          }
+        });
+      }
+    }
+  }
+
+  getSongFromCache = (songId: string): TrackAndAudio | undefined => {
+    const { songCache } = this.props;
+
+    const existingSong = songCache.find(song => {
+      const id = song['song']['id'];
+      if (songId === id) {
+        return song;
+      }
+    });
+
+    return existingSong;
+  }
+
+  handleFetchingSongAudioFeatures = async (songId: string) => {
+    const response = await this.getSongAudioFeatures(songId);
+
+    if (response['status'] === 200) {
+      const audioFeatures: AudioFeatures = response.data;
+      return audioFeatures;
+    }
+    
+    return undefined;
   }
 
   getUserPlaylists = () => {
@@ -127,14 +225,19 @@ class Profile extends Component<Props, {}> {
     return axios.get('/api/recently-played');
   }
 
+  getSongAudioFeatures = (songId: string) => {
+    return axios.get('/api/audio-features/' + songId);
+  }
+
   render() {
-    const { selectedSong } = this.props;
+    const { activeSong } = this.state;
+    const { selectedSongs } = this.props;
 
     return(
       <Container style={{'marginTop': '10px'}}>
         <Row>
           <Col xs={{span: 12, order: 1}} md={{span: 8, order:1}}>
-            <SearchBar song={selectedSong}/>
+            {/* <SearchBar song={selectedSongs}/> */}
           </Col>
         </Row>
 
@@ -144,12 +247,13 @@ class Profile extends Component<Props, {}> {
               <Library title="Recently Played"
               items={this.props.userRecentSongs || []}
               itemType='track'
-              itemClickHandler={this.setSelectedSong}/>
+              rowClickHandler={this.setActiveSong}
+              itemSelectHandler={this.addOrRemoveSelectedSong}/>
             </Card>
           </Col>
           <Col xs={{span: 12, order: 2}} md={{span: 4, order: 2}}>
             <Card>
-              <SelectedSongContainer song={selectedSong}/>
+              {/* <SelectedSongContainer song={activeSong}/> */}
             </Card>
           </Col>
         </Row>
@@ -165,7 +269,8 @@ const mapStateToProps = (state: any, ownProps?: OwnProps): ReduxProps => {
     userData: state.userData.userData,
     userPlaylists: state.userPlaylists.playlists,
     userRecentSongs: state.userRecentSongs.songs,
-    selectedSong: state.selectedSong.song,
+    selectedSongs: state.selectedSongs.songs,
+    songCache: state.songCache.songs,
   }
 }
 
@@ -177,7 +282,9 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps): DispatchProps =>
     fetchUserPlaylistsAction: () => dispatch(fetchUserPlaylists()),
     setUserRecentSongs: (payload: Track[]) => dispatch(setUserRecentSongs(payload)),
     fetchUserRecentSongs: () => dispatch(fetchUserRecentSongs()),
-    setSelectedSong: (payload: TrackSnippet) => dispatch(setSelectedSong(payload))
+    addSelectedSong: (payload: TrackAndAudio) => dispatch(addSelectedSong(payload)),
+    removeSelectedSong: (payload: string) => dispatch(removeSelectedSong(payload)),
+    addSongToCache: (payload: TrackAndAudio) => dispatch(addSongToCache(payload)),
   }
 };
 

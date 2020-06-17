@@ -71,6 +71,11 @@ export interface AudioFeatures {
   tempo: number,
 }
 
+export interface TrackAndAudio {
+  song: TrackSnippet,
+  audioFeatures: AudioFeatures,
+}
+
 // export interface PlayHistory {
 //   track: any, // TODO make interface for track
 //   playedAt: any // TODO figure out how to make ISO8601 timestamp into a type
