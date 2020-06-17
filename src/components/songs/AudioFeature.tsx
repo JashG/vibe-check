@@ -8,7 +8,7 @@ type Props = {
   value: number,
 }
 
-type ValueBarProps = {
+type PercentProps = {
   percentFill: number,
 }
 
@@ -22,11 +22,15 @@ const ValueBar = styled.div`
   border: 2px solid rgba(0,0,0,0.08);
   border-radius: 6px;
 
-  > div {
+  > div:first-child {
     height: 100%;
-    width: ${(props: ValueBarProps) => (props.percentFill + '%')};
+    width: ${(props: PercentProps) => (props.percentFill + '%')};
     background-color: #DCECFE;
   }
+`
+
+const ValueTooltip = styled.div`
+  margin-left: ${(props: PercentProps) => (props.percentFill + '%')};
 `
 
 const AudioFeature = (props: Props) => {
@@ -41,13 +45,14 @@ const AudioFeature = (props: Props) => {
     return 0;
   }
 
-  const { name } = props;
+  const { name, value } = props;
 
   return(
     <div>
       <FeatureName>{name}</FeatureName>
       <ValueBar percentFill={getPercentFill()}>
-        <div></div>
+        <div/>
+        <ValueTooltip percentFill={getPercentFill()}>{value}</ValueTooltip>
       </ValueBar>
     </div>
   );
