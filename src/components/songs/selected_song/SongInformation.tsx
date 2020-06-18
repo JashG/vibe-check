@@ -9,6 +9,7 @@ import SongAudioFeatures from '../SongAudioFeatures';
 
 type Props = {
   song: TrackAndAudio | undefined,
+  loadingSong: boolean,
 }
 
 const SongDataContainer = styled.div`
@@ -18,7 +19,7 @@ const SongDataContainer = styled.div`
 const SongInformation = (props: Props) => {
 
   const renderSongData = () => {
-    const { song: songData } = props;
+    const { song: songData, loadingSong: loading } = props;
 
     // If there is no selected song, render UI that shows placeholder text
     if (!songData) {
@@ -29,18 +30,18 @@ const SongInformation = (props: Props) => {
       );
     }
 
-    // If there is a selected song, but we're fetching its audio features, render loading icon
-    // if (fetchingAudioFeatures) {
-    //   return (
-    //     <Segment style={{'margin': '0'}}>
-    //       <Dimmer active inverted>
-    //         <Loader inverted>Loading</Loader>
-    //       </Dimmer>
+    // If there is a selected song, but we're loading its audio features, render loading icon
+    if (loading) {
+      return (
+        <Segment style={{'margin': '0'}}>
+          <Dimmer active inverted>
+            <Loader inverted>Loading</Loader>
+          </Dimmer>
 
-    //       <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
-    //     </Segment>
-    //   );
-    // }
+          <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
+        </Segment>
+      );
+    }
 
     const song = songData['song'];
     const audioFeatures = songData['audioFeatures'];

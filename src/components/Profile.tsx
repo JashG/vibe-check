@@ -42,6 +42,8 @@ type Props = OwnProps & ReduxProps & DispatchProps
 
 type State = {
   activeSong: TrackAndAudio | undefined, // Song that the user has clicked to view more information
+  loadingActiveSong: boolean, // Whether or not we are loading active song's information
+                              // True when we need to fetch it's audio features from backend
 }
 
 class Profile extends Component<Props, State> {
@@ -50,6 +52,7 @@ class Profile extends Component<Props, State> {
     super(props);
     this.state = {
       activeSong: undefined,
+      loadingActiveSong: false,
     }
   }
 
@@ -132,16 +135,31 @@ class Profile extends Component<Props, State> {
           activeSong: existingSongData
         });
       } else {
+        this.setState({
+          loadingActiveSong: true
+        });
+
         this.handleFetchingSongAudioFeatures(songId).then(audioFeatures => {
           if (audioFeatures) {
             const songData: TrackAndAudio = {
               song: song,
               audioFeatures: audioFeatures
             }
-            this.setState({activeSong: songData});
+            this.setState({
+              activeSong: songData,
+              loadingActiveSong: false,
+            });
             this.props.addSongToCache(songData);
+          } else {
+            this.setState({
+              loadingActiveSong: false
+            });
           }
-        });
+        }).catch(error => {
+          this.setState({
+            loadingActiveSong: false
+          });
+        })
       }
     }
   }
@@ -223,7 +241,7 @@ class Profile extends Component<Props, State> {
   }
 
   render() {
-    const { activeSong } = this.state;
+    const { activeSong, loadingActiveSong } = this.state;
     const { userRecentSongs, selectedSongs } = this.props;
 
     return(
@@ -247,7 +265,7 @@ class Profile extends Component<Props, State> {
           </Col>
           <Col xs={{span: 12, order: 2}} md={{span: 4, order: 2}}>
             <Card>
-              <SongInformation song={activeSong}/>
+              <SongInformation song={activeSong} loadingSong={loadingActiveSong}/>
             </Card>
           </Col>
         </Row>
