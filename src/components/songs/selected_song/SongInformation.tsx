@@ -1,29 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
-import { TrackSnippet, AudioFeatures } from '../../../constants/types';
+import { TrackAndAudio } from '../../../constants/types';
 import Header from '../../Header';
 import SongBio from '../SongBio';
 import { isEmptyObject } from '../../../helpers/objects';
 import SongAudioFeatures from '../SongAudioFeatures';
 
 type Props = {
-  song: TrackSnippet,
-  audioFeatures: AudioFeatures,
-  fetchingAudioFeatures: boolean,
+  song: TrackAndAudio | undefined,
 }
 
 const SongDataContainer = styled.div`
   padding: 10px;
 `
 
-const SelectedSong = (props: Props) => {
+const SongInformation = (props: Props) => {
 
   const renderSongData = () => {
-    const { song, audioFeatures, fetchingAudioFeatures } = props;
+    const { song: songData } = props;
 
     // If there is no selected song, render UI that shows placeholder text
-    if (isEmptyObject(song)) {
+    if (!songData) {
       return (
         <Segment style={{'margin': '0'}}>
           <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
@@ -32,18 +30,20 @@ const SelectedSong = (props: Props) => {
     }
 
     // If there is a selected song, but we're fetching its audio features, render loading icon
-    if (fetchingAudioFeatures) {
-      return (
-        <Segment style={{'margin': '0'}}>
-          <Dimmer active inverted>
-            <Loader inverted>Loading</Loader>
-          </Dimmer>
+    // if (fetchingAudioFeatures) {
+    //   return (
+    //     <Segment style={{'margin': '0'}}>
+    //       <Dimmer active inverted>
+    //         <Loader inverted>Loading</Loader>
+    //       </Dimmer>
 
-          <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
-        </Segment>
-      );
-    }
+    //       <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
+    //     </Segment>
+    //   );
+    // }
 
+    const song = songData['song'];
+    const audioFeatures = songData['audioFeatures'];
     // Render SongBio and SongFeatures components
     return (
       <SongDataContainer>
@@ -62,4 +62,4 @@ const SelectedSong = (props: Props) => {
 
 }
 
-export default SelectedSong;
+export default SongInformation;

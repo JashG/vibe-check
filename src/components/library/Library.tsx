@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components'
-import { Track, Playlist, TrackSnippet } from '../../constants/types';
+import { Track, TrackAndAudio, TrackSnippet } from '../../constants/types';
 import LibraryTable from './LibraryTable';
 import Header from '../Header';
 
@@ -11,8 +11,9 @@ const tableOptions = [
 
 type Props = {
   title: string,
-  items: Track[] | Playlist[],
+  items: Track[],
   itemType: 'track' | 'playlist',
+  selectedItems: TrackAndAudio[],
   rowClickHandler: (song: TrackSnippet) => void,
   itemSelectHandler: (song: TrackSnippet) => void,
 }
@@ -39,7 +40,7 @@ class Library extends Component<Props, any> {
 
   render() {
     const { activeTable } = this.state;
-    const { items, itemType, rowClickHandler, itemSelectHandler } = this.props;
+    const { items, itemType, selectedItems, rowClickHandler, itemSelectHandler } = this.props;
 
     return(
       <div>
@@ -51,6 +52,7 @@ class Library extends Component<Props, any> {
           <LibraryTable
           items={items}
           itemType={itemType}
+          selectedItems={selectedItems}
           rowClickHandler={rowClickHandler}
           itemSelectHandler={itemSelectHandler}/>
         </LibraryContent>

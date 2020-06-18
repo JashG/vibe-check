@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Table, Menu, Icon, Checkbox } from 'semantic-ui-react'
-import { AlbumImage, Track, TrackSnippet, Playlist } from '../../constants/types';
+import { AlbumImage, Track, TrackSnippet, TrackAndAudio, Playlist } from '../../constants/types';
+import { MAX_SELECTED_SONGS } from '../Profile';
 
 const defaultProps = {
   perPage: 10
@@ -11,6 +12,7 @@ const defaultProps = {
 type Props = {
   items: Track[] | Playlist[],
   itemType: 'track' | 'playlist',
+  selectedItems: TrackAndAudio[],
   perPage: number,
   rowClickHandler: (song: TrackSnippet) => void,
   itemSelectHandler: (song: TrackSnippet) => void,
@@ -148,6 +150,23 @@ class LibraryTable extends Component<Props, State> {
     }
   }
 
+  shouldDisableCheckbox = (songId: string) => {
+    const { selectedItems } = this.props;
+    const songIsSelected = selectedItems.filter(song => song['song']['id'] === songId);
+
+    return selectedItems.length >= MAX_SELECTED_SONGS && songIsSelected.length === 0;
+
+  }
+
+  handleCheckboxClick = (song: TrackSnippet, songId: string) => {
+    const { itemSelectHandler } = this.props;
+
+    // Handles the checkbox being clicked
+    itemSelectHandler(song);
+    // Sets the given row as active so the UI can update accordingly
+    this.setActiveRow(songId);
+  }
+
   renderPagination = () => {
     const { currentPage, numPages } = this.state;
 
@@ -260,8 +279,11 @@ class LibraryTable extends Component<Props, State> {
               <Table.Row key={songId + index}
               active={songId === activeRow}
               onClick={rowClickHandler.bind(this, trackSnippet)}>
-                <Table.Cell collapsing onClick={itemSelectHandler.bind(this, trackSnippet)}>
-                  <Checkbox />
+                <Table.Cell collapsing
+                active={songId === activeRow}
+                onClick={this.setActiveRow.bind(this, songId)}>
+                  <Checkbox disabled={this.shouldDisableCheckbox(songId)}
+                  onClick={this.handleCheckboxClick.bind(this, trackSnippet, songId)}/>
                 </Table.Cell>
                 <TableCellSelectable active={songId === activeRow} onClick={this.setActiveRow.bind(this, songId)}>
                   {displaySongName(item['name'], index)}

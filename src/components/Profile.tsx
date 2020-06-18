@@ -8,11 +8,11 @@ import { Album, Playlist, Track, TrackSnippet, UserData, TrackAndAudio, AudioFea
 import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, setUserPlaylists, setUserRecentSongs, addSelectedSong, removeSelectedSong, addSongToCache } from '../store/actions';
 import Card from './cards/Card';
 import Library from './library/Library';
-// import SelectedSongContainer from './songs/selected_song/SelectedSongContainer';
+import SongInformation from './songs/selected_song/SongInformation';
 // import SearchBar from './SearchBar';
 
 // Maximum number of songs user can select before searching for new music
-const MAX_SELECTED_SONGS = 5;
+export const MAX_SELECTED_SONGS = 5;
 
 interface OwnProps {
   // none, as of now
@@ -42,7 +42,6 @@ type Props = OwnProps & ReduxProps & DispatchProps
 
 type State = {
   activeSong: TrackAndAudio | undefined, // Song that the user has clicked to view more information
-  fetchingAudioFeatures: boolean,
 }
 
 class Profile extends Component<Props, State> {
@@ -51,7 +50,6 @@ class Profile extends Component<Props, State> {
     super(props);
     this.state = {
       activeSong: undefined,
-      fetchingAudioFeatures: false,
     }
   }
 
@@ -70,8 +68,6 @@ class Profile extends Component<Props, State> {
     this.setInitialState(responses);
   }
 
-  // TODO: In our backend, we will re-format data from Spotify API to match the types
-  // we've declared so we don't have to do any formatting on the frontend
   setInitialState = (responses: AxiosResponse<any>[]) => {
     responses.forEach(response => {
       const data = response.data;
@@ -136,10 +132,6 @@ class Profile extends Component<Props, State> {
           activeSong: existingSongData
         });
       } else {
-        this.setState({
-          fetchingAudioFeatures: true
-        });
-
         this.handleFetchingSongAudioFeatures(songId).then(audioFeatures => {
           if (audioFeatures) {
             const songData: TrackAndAudio = {
@@ -181,6 +173,7 @@ class Profile extends Component<Props, State> {
               song: song,
               audioFeatures: audioFeatures
             }
+
             this.props.addSelectedSong(songData);
             this.props.addSongToCache(songData);
           }
@@ -231,7 +224,7 @@ class Profile extends Component<Props, State> {
 
   render() {
     const { activeSong } = this.state;
-    const { selectedSongs } = this.props;
+    const { userRecentSongs, selectedSongs } = this.props;
 
     return(
       <Container style={{'marginTop': '10px'}}>
@@ -245,15 +238,16 @@ class Profile extends Component<Props, State> {
           <Col xs={{span: 12, order: 1}} md={{span: 8, order:1}}>
             <Card>
               <Library title="Recently Played"
-              items={this.props.userRecentSongs || []}
+              items={userRecentSongs || []}
               itemType='track'
+              selectedItems={selectedSongs}
               rowClickHandler={this.setActiveSong}
               itemSelectHandler={this.addOrRemoveSelectedSong}/>
             </Card>
           </Col>
           <Col xs={{span: 12, order: 2}} md={{span: 4, order: 2}}>
             <Card>
-              {/* <SelectedSongContainer song={activeSong}/> */}
+              <SongInformation song={activeSong}/>
             </Card>
           </Col>
         </Row>
