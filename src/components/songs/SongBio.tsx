@@ -34,7 +34,7 @@ const SongTextContainer = styled.div`
 
 const SongName = styled.span`
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 600;
 
   @media (min-width: 768px) and (max-width: 992px) {
     font-size: 16px;
@@ -54,7 +54,7 @@ const SongBio = (props: Props) => {
       <SongImage src={image} alt={albumName}/>
       <SongTextContainer>
         <SongName>{songName}</SongName>
-        <span>By: {artists[0]['name']}</span>
+        <span>{artists[0]['name']}</span>
       </SongTextContainer>
     </SongBioContainer>
   );

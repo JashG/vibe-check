@@ -24,7 +24,7 @@ const FeatureName = styled.span`
 const ValueBar = styled.div`
   height: 18px;
   width: 100%;
-  border: 2px solid rgba(0,0,0,0.08);
+  border: 2px solid rgba(0,0,0,0.14);
   border-radius: 6px;
 
   > div:first-child {
@@ -38,6 +38,14 @@ const ValueBar = styled.div`
 const ValueContainer = styled.div`
   margin-top: 5px;
   margin-left: ${(props: PercentProps) => (props.percentFill < 92 ? props.percentFill + '%' : '92%')};
+
+  @media (min-width: 992px) and (max-width: 1200px) {
+    margin-left: ${(props: PercentProps) => (props.percentFill < 88 ? props.percentFill + '%' : '88%')};
+  }
+
+  @media (min-width: 768px) and (max-width: 992px) {
+    margin-left: ${(props: PercentProps) => (props.percentFill < 84 ? props.percentFill + '%' : '84%')};
+  }
 `
 
 const Value = styled.span`

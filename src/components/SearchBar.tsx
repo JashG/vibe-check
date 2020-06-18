@@ -18,9 +18,7 @@ const SearchBarContainer = styled.div`
   width: 100%;
   margin-bottom: 20px;
   padding-bottom: 6px;
-  background-color: rgb(255, 255, 255, 0.04);
-  border: 2px solid rgb(0, 0, 0, 0.08);
-  border-radius: 6px;
+  background-color: rgb(255, 255, 255, 0.06);
 `
 
 const SelectedSongsContainer = styled.div`
