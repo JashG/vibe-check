@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components'
-import { Dropdown } from 'semantic-ui-react'
+import { Dropdown, Icon } from 'semantic-ui-react'
 import { PRIMARY, TEXT_LIGHT } from '../constants/colors';
 
 type Props = {
   defaultText: string,
+  icon?: string,
   color?: string,
   useDropdown?: boolean,
   dropdownOptions?: string[],
@@ -26,7 +27,7 @@ const Heading = styled.div`
 `
 
 const Header = (props: Props) => {
-  const { defaultText, color } = props;
+  const { defaultText, icon, color } = props;
 
   const headerContent = () => {
     if (props.useDropdown && props.dropdownOptions) {
@@ -56,6 +57,7 @@ const Header = (props: Props) => {
 
   return (
     <Heading color={color}>
+      {icon ? <Icon className={icon} style={{'marginRight': '6px'}}/> : null}
       {headerContent()}
     </Heading>
   );

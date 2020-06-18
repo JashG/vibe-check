@@ -55,7 +55,7 @@ const SongInformation = (props: Props) => {
 
   return(
     <div>
-      <Header defaultText='Song Audio Features'/>
+      <Header defaultText='Song Audio Features' icon='headphones'/>
       {renderSongData()}
     </div>
   );
