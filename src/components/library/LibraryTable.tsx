@@ -26,6 +26,15 @@ type State = {
   activeRow: string, // Stores active song's ID
 }
 
+type DisplayAlbumProps = {
+  img: string,
+  name: string,
+}
+
+// const TableBodyStyled = styled(Table.Body)`
+//   background-color: 
+// `
+
 const TableCellSelectable = styled(Table.Cell)`
   padding: .4em .6em!important;
 
@@ -34,11 +43,6 @@ const TableCellSelectable = styled(Table.Cell)`
     background: 
   }
 `
-
-type DisplayAlbumProps = {
-  img: string,
-  name: string,
-}
 
 const Container = styled.div`
   display: flex;
@@ -189,7 +193,7 @@ class LibraryTable extends Component<Props, State> {
 
     return (
       <Table.Row>
-        <Table.HeaderCell colSpan='4'>
+        <Table.HeaderCell colSpan='5'>
           <Menu floated='right' pagination>
             <Menu.Item as='a'
             icon
@@ -210,7 +214,7 @@ class LibraryTable extends Component<Props, State> {
 
   renderTable = () => {
     const { currentPage, activeRow } = this.state;
-    const { items, itemType, perPage, rowClickHandler, itemSelectHandler } = this.props;
+    const { items, itemType, perPage, rowClickHandler } = this.props;
 
     const tableRows = () => {
       if (itemType === 'track') {

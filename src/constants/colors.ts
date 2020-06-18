@@ -1,0 +1,8 @@
+const SANTA_FE = '#BC7548'
+const PICKLED_BLUEWOOD = '#34445D'
+const DESERT_STORM = '#F1F1F0'
+
+export const PRIMARY = SANTA_FE;
+export const DARK_ACCENT = PICKLED_BLUEWOOD;
+
+export const TEXT_LIGHT = DESERT_STORM;

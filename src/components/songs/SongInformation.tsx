@@ -1,11 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
-import { TrackAndAudio } from '../../../constants/types';
-import Header from '../../Header';
-import SongBio from '../SongBio';
-import { isEmptyObject } from '../../../helpers/objects';
-import SongAudioFeatures from '../SongAudioFeatures';
+import { TrackAndAudio } from '../../constants/types';
+import Header from '../Header';
+import SongBio from './SongBio';
+import SongAudioFeatures from './SongAudioFeatures';
 
 type Props = {
   song: TrackAndAudio | undefined,
@@ -56,7 +55,7 @@ const SongInformation = (props: Props) => {
 
   return(
     <div>
-      <Header defaultText='Song Audio Features' color={'#feecdc'}/>
+      <Header defaultText='Song Audio Features'/>
       {renderSongData()}
     </div>
   );

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { DARK_ACCENT, TEXT_LIGHT } from '../../constants/colors';
 
 type Props = {
   name: string,
@@ -29,8 +30,8 @@ const ValueBar = styled.div`
   > div:first-child {
     height: 100%;
     width: ${(props: PercentProps) => (props.percentFill + '%')};
-    background-color: #DCECFE;
-    // background-color: #FEECDC;
+    border-radius: 4px;
+    background-color: ${DARK_ACCENT};
   }
 `
 
@@ -43,8 +44,8 @@ const Value = styled.span`
   padding: 2px 4px 2px 4px;
   font-size: 12px;
   border-radius: 3px;
-  background-color: #DCECFE;
-  // background-color: #FEECDC;
+  background-color: ${DARK_ACCENT};
+  color: ${TEXT_LIGHT};
 `
 
 const AudioFeature = (props: Props) => {

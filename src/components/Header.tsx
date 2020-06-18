@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import { Dropdown } from 'semantic-ui-react'
+import { PRIMARY, TEXT_LIGHT } from '../constants/colors';
 
 type Props = {
   defaultText: string,
@@ -11,15 +12,17 @@ type Props = {
 }
 
 type HeadingProps = {
-  color?: string
+  backgroundColor?: string
 }
 
 const Heading = styled.div`
   height: 36px;
   padding: 8px 0 0 8px;
   font-size: 18px;
-  background:${(props: HeadingProps) => (props.color ? props.color : '#F5E1EE')};
   border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+  background-color: ${(props: HeadingProps) => (props.backgroundColor ? props.backgroundColor : PRIMARY)};
+  color: ${TEXT_LIGHT};
+  font-weight: 600;
 `
 
 const Header = (props: Props) => {

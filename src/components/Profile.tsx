@@ -8,8 +8,8 @@ import { Album, Playlist, Track, TrackSnippet, UserData, TrackAndAudio, AudioFea
 import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, setUserPlaylists, setUserRecentSongs, addSelectedSong, removeSelectedSong, addSongToCache } from '../store/actions';
 import Card from './cards/Card';
 import Library from './library/Library';
-import SongInformation from './songs/selected_song/SongInformation';
-// import SearchBar from './SearchBar';
+import SongInformation from './songs/SongInformation';
+import SearchBar from './SearchBar';
 
 // Maximum number of songs user can select before searching for new music
 export const MAX_SELECTED_SONGS = 5;
@@ -248,7 +248,7 @@ class Profile extends Component<Props, State> {
       <Container style={{'marginTop': '10px'}}>
         <Row>
           <Col xs={{span: 12, order: 1}} md={{span: 8, order:1}}>
-            {/* <SearchBar song={selectedSongs}/> */}
+            <SearchBar songs={selectedSongs}/>
           </Col>
         </Row>
 

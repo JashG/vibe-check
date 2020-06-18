@@ -1,41 +1,59 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import SongBio from '../components/songs/SongBio';
-import { TrackSnippet } from '../constants/types';
+import SelectedSong from '../components/songs/SelectedSong';
+import { TrackAndAudio } from '../constants/types';
 
 type State = {
-  
+  // none, for now
 }
 
 type Props = {
-  song: TrackSnippet,
+  songs: TrackAndAudio[],
 }
 
 const SearchBarContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  height: 80px;
   width: 100%;
   margin-bottom: 20px;
+  padding-bottom: 6px;
   background-color: rgb(255, 255, 255, 0.04);
   border: 2px solid rgb(0, 0, 0, 0.08);
   border-radius: 6px;
 `
 
+const SelectedSongsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  height: 100%;
+  width: 80%;
+  overflow: hidden;
+`
+
 class SearchBar extends Component<Props, {}> {
+
+  renderSelectedSongs = () => {
+    const { songs } = this.props;
+    const selectedSongs: React.ReactFragment[] = [];
+
+    songs.forEach(song => {
+      selectedSongs.push(
+        <SelectedSong key={song['song']['id']} song={song}/>
+      );
+    });
+
+    return selectedSongs;
+  }
 
   render() {
     return (
       <SearchBarContainer>
+        <SelectedSongsContainer>
+          {this.renderSelectedSongs()}
+        </SelectedSongsContainer>
         <div>
-          thing1
-        </div>
-        <div>
-          thing2
-        </div>
-        <div>
-          thing3
+          search button
         </div>
       </SearchBarContainer>
     );
