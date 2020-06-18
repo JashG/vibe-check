@@ -35,6 +35,14 @@ const SongTextContainer = styled.div`
   justify-content: center;
   width: 60%;
 
+  &:before {
+    position: absolute;
+    content: '';
+    width: 110px;
+    height: 50px;
+    background-image: linear-gradient(to right,transparent 0% 75%, ${PRIMARY} 100%)
+  }
+
   > span {
     white-space: nowrap;
     overflow: hidden;
