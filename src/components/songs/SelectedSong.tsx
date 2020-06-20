@@ -21,12 +21,19 @@ const SelectedSongContainer = styled.div`
   -webkit-box-shadow: 0px 0px 8px -3px rgba(0,0,0,0.75);
   -moz-box-shadow: 0px 0px 8px -3px rgba(0,0,0,0.75);
   box-shadow: 0px 0px 8px -3px rgba(0,0,0,0.75);
+
+  @media (max-width: 992px) {
+    width: 120px;
+  }
 `
 
 const SongImageContainer = styled.div`
   position: relative;
-  margin-right: 4px;
   width: 33%;
+
+  @media (max-width: 992px) {
+    display: none;
+  }
 `
 
 type SongImageProps = {
@@ -49,6 +56,7 @@ const SongTextContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-left: 4px;
   width: 50%;
 
   &:hover {
@@ -67,6 +75,10 @@ const SongTextContainer = styled.div`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  @media (max-width: 992px) {
+    width: 75%;
   }
 `
 
