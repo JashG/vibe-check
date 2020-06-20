@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -45,6 +46,12 @@ type State = {
   loadingActiveSong: boolean, // Whether or not we are loading active song's information
                               // True when we need to fetch it's audio features from backend
 }
+
+const StickyRow = styled(Row)`
+  position: sticky;
+  top: 0;
+  z-index: 2;
+`
 
 class Profile extends Component<Props, State> {
 
@@ -246,11 +253,14 @@ class Profile extends Component<Props, State> {
 
     return(
       <Container style={{'marginTop': '10px'}}>
-        <Row>
+        <StickyRow>
           <Col xs={{span: 12, order: 1}} md={{span: 8, order:1}}>
-            <SearchBar songs={selectedSongs}/>
+            <SearchBar
+            songs={selectedSongs}
+            itemTextClickHandler={this.setActiveSong}
+            itemIconClickHandler={this.addOrRemoveSelectedSong}/>
           </Col>
-        </Row>
+        </StickyRow>
 
         <Row>
           <Col xs={{span: 12, order: 1}} md={{span: 8, order:1}}>

@@ -1,15 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
-import { TrackAndAudio } from '../../constants/types';
-import { PRIMARY, TEXT_LIGHT } from '../../constants/colors';
+import { Icon } from 'semantic-ui-react';
+import { TrackSnippet, TrackAndAudio } from '../../constants/types';
+import { PRIMARY, TEXT_LIGHT, DARK_ACCENT } from '../../constants/colors';
 
 type Props = {
   song: TrackAndAudio,
+  itemTextClickHandler: (song: TrackSnippet) => void,
+  itemIconClickHandler: (song: TrackSnippet) => void,
 }
 
 const SelectedSongContainer = styled.div`
   display: flex;
-  width: 165px;
+  width: 190px;
   height: 50px;
   margin: 6px 0 0 6px;
   border-radius: 3px;
@@ -21,24 +24,41 @@ const SelectedSongContainer = styled.div`
 `
 
 const SongImageContainer = styled.div`
+  position: relative;
+  margin-right: 4px;
   width: 33%;
 `
 
-const SongImage = styled.img`
+type SongImageProps = {
+  url: string
+}
+
+const SongImage = styled.div`
   height: 100%;
-  margin-right: 4px;
+
+  // Fallback option
+  background-image: url('${(props: SongImageProps) => props.url}');
+
+  background: linear-gradient(to right, ${DARK_ACCENT}80, ${DARK_ACCENT}80), url('${(props: SongImageProps) => props.url}');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 `
 
 const SongTextContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 60%;
+  width: 50%;
+
+  &:hover {
+    cursor: pointer;
+  }
 
   &:before {
     position: absolute;
     content: '';
-    width: 110px;
+    width: 95px;
     height: 50px;
     background-image: linear-gradient(to right,transparent 0% 75%, ${PRIMARY} 100%)
   }
@@ -55,24 +75,59 @@ const SongName = styled.span`
   font-weight: 600;
 `
 
+const RemoveSongContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 17%;
+`
+
+const CloseIcon = styled.span`
+  height: 20px;
+  width: 20px;
+  padding-right: 4px;
+  text-align: center;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:before, &:after {
+    position: absolute;
+    content: ' ';
+    height: 20px;
+    width: 3px;
+    background-color: ${TEXT_LIGHT};
+  }
+
+  &:before {
+    transform: rotate(45deg);
+  }
+
+  &:after {
+    transform: rotate(-45deg);
+  }
+`
+
 const SelectedSong = (props: Props) => {
-  const { song } = props;
+  const { song, itemTextClickHandler, itemIconClickHandler } = props;
   const songData = song['song'];
   const songName = songData['name'];
-  const albumName = songData['albumName'];
   const image = songData['albumImage'];
   const artists = songData['artists'];
-  const audioFeatures = song['audioFeatures'];
 
   return(
     <SelectedSongContainer>
       <SongImageContainer>
-        <SongImage src={image} alt={albumName}/>
+        <SongImage url={image}/>
       </SongImageContainer>
-      <SongTextContainer>
+      <SongTextContainer onClick={() => itemTextClickHandler(songData)}>
         <SongName>{songName}</SongName>
         <span>{artists[0]['name']}</span>
       </SongTextContainer>
+      <RemoveSongContainer>
+        <CloseIcon onClick={() => itemIconClickHandler(songData)}/>
+      </RemoveSongContainer>
     </SelectedSongContainer>
   );
 

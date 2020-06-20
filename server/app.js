@@ -119,6 +119,22 @@ router.get('/audio-features/:songId', (req, res) => {
   }
 });
 
+router.get('/recommendations/:songIds', (req, res) => {
+  const songIds = req.params.songIds;
+  if (songIds) {
+    const songIdsArray = songIds.split(',');
+    if (songIdsArray.length > 5) {
+      res.status(400).send('Comma-separated list of song IDs must not contain more than 5 song IDs');
+    }
+    spotifyApi.getRecommendations({seed_tracks: songIdsArray}).then(response => {
+      response.body.responseType = 'recommendations';
+      res.send(response.body);
+    }).catch(error => {
+      res.send(error);
+    });
+  }
+});
+
 app.use('/api/', router);
 
 app.listen(PORT, () => console.log(`Example app listening at http://localhost:${PORT}`));

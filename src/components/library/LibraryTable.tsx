@@ -156,10 +156,12 @@ class LibraryTable extends Component<Props, State> {
 
   shouldDisableCheckbox = (songId: string) => {
     const { selectedItems } = this.props;
-    const songIsSelected = selectedItems.filter(song => song['song']['id'] === songId);
+    return selectedItems.length >= MAX_SELECTED_SONGS && !this.songIsSelected(songId);
+  }
 
-    return selectedItems.length >= MAX_SELECTED_SONGS && songIsSelected.length === 0;
-
+  songIsSelected = (songId: string) => {
+    const { selectedItems } = this.props;
+    return selectedItems.filter(song => song['song']['id'] === songId).length > 0;
   }
 
   handleCheckboxClick = (song: TrackSnippet, songId: string) => {
@@ -287,6 +289,7 @@ class LibraryTable extends Component<Props, State> {
                 active={songId === activeRow}
                 onClick={this.setActiveRow.bind(this, songId)}>
                   <Checkbox disabled={this.shouldDisableCheckbox(songId)}
+                  checked={this.songIsSelected(songId)}
                   onClick={this.handleCheckboxClick.bind(this, trackSnippet, songId)}/>
                 </Table.Cell>
                 <TableCellSelectable active={songId === activeRow} onClick={this.setActiveRow.bind(this, songId)}>

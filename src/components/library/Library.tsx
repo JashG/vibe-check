@@ -45,7 +45,7 @@ class Library extends Component<Props, any> {
     return(
       <div>
         <Header defaultText={activeTable}
-        icon={'music'}
+        icon='music'
         useDropdown
         dropdownOptions={tableOptions}
         dropdownOptionOnClick={this.setActiveTable}/>
