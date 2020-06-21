@@ -9,7 +9,7 @@ import {  FETCH_USER_DATA,
           REMOVE_SELECTED_SONG,
           ADD_SONG_TO_CACHE,
         } from '../types';
-import { UserData, Playlist, Track, TrackAndAudio } from '../../constants/types';
+import { UserData, Playlist, TrackSnippet, TrackAndAudio } from '../../constants/types';
 
 const initialUserData = {
   fetching: false,
@@ -23,7 +23,7 @@ const initialUserPlaylists = {
 
 const initialUserRecentSongs = {
   fetching: false,
-  songs: [] as Track[],
+  songs: [] as TrackSnippet[],
 }
 
 const initialSelectedSongs = {
@@ -76,7 +76,7 @@ function userPlaylistsReducer(state = initialUserPlaylists, action: {type: strin
     return state;
 }
 
-function userRecentSongsReducer(state = initialUserRecentSongs, action: {type: string; payload?: Track[]; }) {
+function userRecentSongsReducer(state = initialUserRecentSongs, action: {type: string; payload?: TrackSnippet[]; }) {
   switch(action.type) {
     case FETCH_USER_RECENT_SONGS:
       return {

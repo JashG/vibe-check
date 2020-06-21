@@ -8,7 +8,7 @@ import { FETCH_USER_DATA,
   ADD_SONG_TO_CACHE,
   REMOVE_SELECTED_SONG,
 } from '../types';
-import { UserData, Playlist, Track, TrackAndAudio } from '../../constants/types';
+import { UserData, Playlist, TrackSnippet, TrackAndAudio } from '../../constants/types';
 
 export function fetchUserData() {
   return {
@@ -42,7 +42,7 @@ export function fetchUserRecentSongs() {
   }
 }
 
-export function setUserRecentSongs(songs: Track[]) {
+export function setUserRecentSongs(songs: TrackSnippet[]) {
   return {
     type: SET_USER_RECENT_SONGS,
     payload: songs,

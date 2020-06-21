@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Table, Menu, Icon, Checkbox } from 'semantic-ui-react'
-import { AlbumImage, Track, TrackSnippet, TrackAndAudio, Playlist } from '../../constants/types';
+import { TrackSnippet, TrackAndAudio, Playlist } from '../../constants/types';
 import { MAX_SELECTED_SONGS } from '../Profile';
 
 const defaultProps = {
@@ -10,8 +10,8 @@ const defaultProps = {
 
 // TODO: Look for more concise way to declare Props and DefaultProps types
 type Props = {
-  items: Track[] | Playlist[],
-  itemType: 'track' | 'playlist',
+  items: TrackSnippet[],
+  itemType: 'track',
   selectedItems: TrackAndAudio[],
   perPage: number,
   rowClickHandler: (song: TrackSnippet) => void,
@@ -71,7 +71,7 @@ const DisplayAlbum = (props: DisplayAlbumProps) => {
   );
 }
 
-class LibraryTable extends Component<Props, State> {
+class SongLibraryTable extends Component<Props, State> {
 
   static defaultProps: DefaultProps = defaultProps;
 
@@ -259,38 +259,22 @@ class LibraryTable extends Component<Props, State> {
 
         const rows: React.ReactFragment[] = [];
         const startIdx = (currentPage - 1) * perPage;
-        const itemsToDisplay = items.slice(startIdx, startIdx + perPage);
+        const songsToRender = items.slice(startIdx, startIdx + perPage);
 
-        itemsToDisplay.forEach((item: any, index: number) => {
+        songsToRender.forEach((item: TrackSnippet, index: number) => {
           const songId: string = item['id'];
-          const albumName: string = item['album']['name'];
-          const albumImages: AlbumImage[] = item['album']['images'];
-          let albumImg = '';
-          if (albumImages.length > 1) {
-            albumImg = albumImages[1]['url'];
-          } else if (albumImages.length === 1) {
-            albumImg = albumImages[0]['url'];
-          }
-
-          const trackSnippet: TrackSnippet = {
-            albumName: albumName,
-            albumImage: albumImg,
-            artists: item['artists'],
-            name: item['name'],
-            id: songId,
-          }
 
           rows.push((
             <React.Fragment key={index}>
               <Table.Row key={songId + index}
               active={songId === activeRow}
-              onClick={rowClickHandler.bind(this, trackSnippet)}>
+              onClick={rowClickHandler.bind(this, item)}>
                 <Table.Cell collapsing
                 active={songId === activeRow}
                 onClick={this.setActiveRow.bind(this, songId)}>
                   <Checkbox disabled={this.shouldDisableCheckbox(songId)}
                   checked={this.songIsSelected(songId)}
-                  onClick={this.handleCheckboxClick.bind(this, trackSnippet, songId)}/>
+                  onClick={this.handleCheckboxClick.bind(this, item, songId)}/>
                 </Table.Cell>
                 <TableCellSelectable active={songId === activeRow} onClick={this.setActiveRow.bind(this, songId)}>
                   {displaySongName(item['name'], index)}
@@ -299,7 +283,7 @@ class LibraryTable extends Component<Props, State> {
                   {displayArtistName(item['artists'], index)}
                 </TableCellSelectable>
                 <TableCellSelectable active={songId === activeRow} onClick={this.setActiveRow.bind(this, songId)}>
-                  <DisplayAlbum name={albumName} img={albumImg}/>
+                  <DisplayAlbum name={item['albumName']} img={item['albumImage']}/>
                 </TableCellSelectable>
                 <TableCellSelectable active={songId === activeRow} onClick={this.setActiveRow.bind(this, songId)}>
                   {item['playedAt']}
@@ -359,4 +343,4 @@ class LibraryTable extends Component<Props, State> {
 
 }
 
-export default LibraryTable;
+export default SongLibraryTable;

@@ -5,10 +5,10 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
-import { Album, Playlist, Track, TrackSnippet, UserData, TrackAndAudio, AudioFeatures } from '../constants/types';
+import { Album, Playlist, TrackSnippet, UserData, TrackAndAudio, AudioFeatures } from '../constants/types';
 import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, setUserPlaylists, setUserRecentSongs, addSelectedSong, removeSelectedSong, addSongToCache } from '../store/actions';
 import Card from './cards/Card';
-import Library from './library/Library';
+import SongLibrary from './library/Library';
 import SongInformation from './songs/SongInformation';
 import SearchBar from './SearchBar';
 
@@ -22,7 +22,7 @@ interface OwnProps {
 interface ReduxProps {
   userData: UserData,
   userPlaylists: Playlist[],
-  userRecentSongs: Track[],
+  userRecentSongs: TrackSnippet[],
   selectedSongs: TrackAndAudio[],
   songCache: TrackAndAudio[],
 }
@@ -32,7 +32,7 @@ interface DispatchProps {
   fetchUserDataAction: () => void,
   setUserPlaylistsAction: (payload: Playlist[]) => void,
   fetchUserPlaylistsAction: () => void,
-  setUserRecentSongs: (payload: Track[]) => void,
+  setUserRecentSongs: (payload: TrackSnippet[]) => void,
   fetchUserRecentSongs: () => void,
   addSelectedSong: (payload: TrackAndAudio) => void,
   removeSelectedSong: (payload: string) => void,
@@ -95,28 +95,21 @@ class Profile extends Component<Props, State> {
         this.props.setUserDataAction(userData);
       } else if (type === 'recently-played') {
         const items: [] = data.items;
-        console.log(items);
         if (items) {
-          const tracks: Track[] = [];
+          const tracks: TrackSnippet[] = [];
           items.forEach(item => {
             const trackData = item['track'];
-            const albumData = item['track']['album'];
-            const album: Album = {
-              artists: albumData['artists'],
-              externalUrl: albumData['external_urls']['spotify'],
-              images: albumData['images'],
-              name: albumData['name'],
-              releaseDate: albumData['release_date'],
-              numTracks: albumData['total_tracks'],
-            }
-            const track: Track = {
+            const albumData: Album = item['track']['album'];
+
+            const track: TrackSnippet = {
               externalUrl: item['context'] ? item['context']['external_urls']['spotify'] : '',
               playedAt: item['played_at'],
-              album: album,
+              albumName: albumData['name'],
+              albumImage: albumData['images'] ? albumData['images'][0]['url'] : '',
               artists: trackData['artists'],
-              duration: trackData['duration_ms'],
               name: trackData['name'],
               id: trackData['id'],
+              duration: trackData['duration_ms'],
             }
 
             tracks.push(track);
@@ -194,13 +187,13 @@ class Profile extends Component<Props, State> {
       } else {
         this.handleFetchingSongAudioFeatures(songId).then(audioFeatures => {
           if (audioFeatures) {
-            const songData: TrackAndAudio = {
+            const selectedSong: TrackAndAudio = {
               song: song,
               audioFeatures: audioFeatures
             }
 
-            this.props.addSelectedSong(songData);
-            this.props.addSongToCache(songData);
+            this.props.addSelectedSong(selectedSong);
+            this.props.addSongToCache(selectedSong);
           }
         });
       }
@@ -265,9 +258,9 @@ class Profile extends Component<Props, State> {
         <Row>
           <Col xs={{span: 12, order: 1}} md={{span: 8, order:1}}>
             <Card>
-              <Library title="Recently Played"
+              <SongLibrary defaultText="Recently Played"
+              tableOptions={['Recently Played', 'Your Playlists']}
               items={userRecentSongs || []}
-              itemType='track'
               selectedItems={selectedSongs}
               rowClickHandler={this.setActiveSong}
               itemSelectHandler={this.addOrRemoveSelectedSong}/>
@@ -302,7 +295,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps): DispatchProps =>
     fetchUserDataAction: () => dispatch(fetchUserData()),
     setUserPlaylistsAction: (payload: Playlist[]) => dispatch(setUserPlaylists(payload)),
     fetchUserPlaylistsAction: () => dispatch(fetchUserPlaylists()),
-    setUserRecentSongs: (payload: Track[]) => dispatch(setUserRecentSongs(payload)),
+    setUserRecentSongs: (payload: TrackSnippet[]) => dispatch(setUserRecentSongs(payload)),
     fetchUserRecentSongs: () => dispatch(fetchUserRecentSongs()),
     addSelectedSong: (payload: TrackAndAudio) => dispatch(addSelectedSong(payload)),
     removeSelectedSong: (payload: string) => dispatch(removeSelectedSong(payload)),

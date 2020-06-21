@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Icon } from 'semantic-ui-react';
 import { TrackSnippet, TrackAndAudio } from '../../constants/types';
 import { PRIMARY, TEXT_LIGHT, DARK_ACCENT } from '../../constants/colors';
 

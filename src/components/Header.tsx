@@ -5,6 +5,7 @@ import { PRIMARY, TEXT_LIGHT } from '../constants/colors';
 
 type Props = {
   defaultText: string,
+  activeText?: string,
   icon?: string,
   color?: string,
   useDropdown?: boolean,
@@ -27,7 +28,7 @@ const Heading = styled.div`
 `
 
 const Header = (props: Props) => {
-  const { defaultText, icon, color } = props;
+  const { defaultText, activeText, icon, color } = props;
 
   const headerContent = () => {
     if (props.useDropdown && props.dropdownOptions) {
@@ -42,7 +43,7 @@ const Header = (props: Props) => {
       });
 
       return (
-        <Dropdown text={defaultText} defaultValue={defaultText}>
+        <Dropdown text={activeText} defaultValue={defaultText}>
           <Dropdown.Menu>
             {dropdownItems}
           </Dropdown.Menu>

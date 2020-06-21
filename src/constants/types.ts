@@ -37,22 +37,15 @@ export interface AlbumImage {
   url: string,
 }
 
-export interface Track {
+export interface TrackSnippet {
   externalUrl: string,
   playedAt: string,
-  album: Album,
-  artists: Artist[],
-  duration: number,
-  name: string,
-  id: string,
-}
-
-export interface TrackSnippet {
   albumName: string,
   albumImage: string,
   artists: Artist[],
   name: string,
   id: string,
+  duration?: string,
 }
 
 export interface AudioFeatures { 
@@ -75,9 +68,3 @@ export interface TrackAndAudio {
   song: TrackSnippet,
   audioFeatures: AudioFeatures,
 }
-
-// export interface PlayHistory {
-//   track: any, // TODO make interface for track
-//   playedAt: any // TODO figure out how to make ISO8601 timestamp into a type
-//   context: any
-// }

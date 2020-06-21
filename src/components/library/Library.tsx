@@ -1,21 +1,16 @@
 import React, { Component } from 'react';
 import styled from 'styled-components'
-import { Track, TrackAndAudio, TrackSnippet } from '../../constants/types';
-import LibraryTable from './LibraryTable';
+import { TrackSnippet, TrackAndAudio } from '../../constants/types';
+import SongLibraryTable from './SongLibraryTable';
 import Header from '../Header';
 
-const tableOptions = [
-  'Recently Played',
-  'Your Playlists'
-]
-
 type Props = {
-  title: string,
-  items: Track[],
-  itemType: 'track' | 'playlist',
+  defaultText: string,
+  items: TrackSnippet[],
   selectedItems: TrackAndAudio[],
   rowClickHandler: (song: TrackSnippet) => void,
   itemSelectHandler: (song: TrackSnippet) => void,
+  tableOptions?: string[],
 }
 
 const LibraryContent = styled.div`
@@ -28,7 +23,7 @@ class Library extends Component<Props, any> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      activeTable: 'Recently Played'
+      activeTable: ''
     };
   }
 
@@ -40,19 +35,20 @@ class Library extends Component<Props, any> {
 
   render() {
     const { activeTable } = this.state;
-    const { items, itemType, selectedItems, rowClickHandler, itemSelectHandler } = this.props;
+    const { defaultText, tableOptions, items, selectedItems, rowClickHandler, itemSelectHandler } = this.props;
 
     return(
       <div>
-        <Header defaultText={activeTable}
+        <Header defaultText={defaultText}
+        activeText={activeTable.length ? activeTable : defaultText}
         icon='music'
         useDropdown
         dropdownOptions={tableOptions}
         dropdownOptionOnClick={this.setActiveTable}/>
         <LibraryContent>
-          <LibraryTable
+          <SongLibraryTable
           items={items}
-          itemType={itemType}
+          itemType='track'
           selectedItems={selectedItems}
           rowClickHandler={rowClickHandler}
           itemSelectHandler={itemSelectHandler}/>
