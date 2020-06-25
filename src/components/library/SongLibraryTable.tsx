@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Table, Menu, Icon, Checkbox } from 'semantic-ui-react'
-import { TrackSnippet, TrackAndAudio, Playlist } from '../../constants/types';
+import { TrackSnippet, TrackAndAudio } from '../../constants/types';
 import { MAX_SELECTED_SONGS } from '../Profile';
+import Loading from '../page_elements/Loading';
 
 const defaultProps = {
   perPage: 10
 }
 
-// TODO: Look for more concise way to declare Props and DefaultProps types
 type Props = {
   items: TrackSnippet[],
+  fetchingItems: boolean,
   itemType: 'track',
   selectedItems: TrackAndAudio[],
   perPage: number,
@@ -30,10 +31,6 @@ type DisplayAlbumProps = {
   img: string,
   name: string,
 }
-
-// const TableBodyStyled = styled(Table.Body)`
-//   background-color: 
-// `
 
 const TableCellSelectable = styled(Table.Cell)`
   padding: .4em .6em!important;
@@ -154,14 +151,14 @@ class SongLibraryTable extends Component<Props, State> {
     }
   }
 
-  shouldDisableCheckbox = (songId: string) => {
-    const { selectedItems } = this.props;
-    return selectedItems.length >= MAX_SELECTED_SONGS && !this.songIsSelected(songId);
-  }
-
   songIsSelected = (songId: string) => {
     const { selectedItems } = this.props;
     return selectedItems.filter(song => song['song']['id'] === songId).length > 0;
+  }
+
+  shouldDisableCheckbox = (songId: string) => {
+    const { selectedItems } = this.props;
+    return selectedItems.length >= MAX_SELECTED_SONGS && !this.songIsSelected(songId);
   }
 
   handleCheckboxClick = (song: TrackSnippet, songId: string) => {
@@ -216,7 +213,11 @@ class SongLibraryTable extends Component<Props, State> {
 
   renderTable = () => {
     const { currentPage, activeRow } = this.state;
-    const { items, itemType, perPage, rowClickHandler } = this.props;
+    const { items, fetchingItems, itemType, perPage, rowClickHandler } = this.props;
+
+    if (fetchingItems) {
+      return Loading;
+    }
 
     const tableRows = () => {
       if (itemType === 'track') {

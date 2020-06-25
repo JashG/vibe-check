@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { Album, Playlist, TrackSnippet, UserData, TrackAndAudio, AudioFeatures } from '../constants/types';
 import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, setUserPlaylists, setUserRecentSongs, addSelectedSong, removeSelectedSong, addSongToCache } from '../store/actions';
 import Card from './cards/Card';
-import SongLibrary from './library/Library';
+import Library from './library/Library';
 import SongInformation from './songs/SongInformation';
 import SearchBar from './SearchBar';
 
@@ -24,6 +24,7 @@ interface ReduxProps {
   userPlaylists: Playlist[],
   userRecentSongs: TrackSnippet[],
   selectedSongs: TrackAndAudio[],
+  fetchingSelectedSongs: boolean,
   songCache: TrackAndAudio[],
 }
 
@@ -242,7 +243,7 @@ class Profile extends Component<Props, State> {
 
   render() {
     const { activeSong, loadingActiveSong } = this.state;
-    const { userRecentSongs, selectedSongs } = this.props;
+    const { userRecentSongs, selectedSongs, fetchingSelectedSongs } = this.props;
 
     return(
       <Container style={{'marginTop': '10px'}}>
@@ -258,9 +259,10 @@ class Profile extends Component<Props, State> {
         <Row>
           <Col xs={{span: 12, order: 1}} md={{span: 8, order:1}}>
             <Card>
-              <SongLibrary defaultText="Recently Played"
+              <Library defaultText="Recently Played"
               tableOptions={['Recently Played', 'Your Playlists']}
               items={userRecentSongs || []}
+              fetchingItems={fetchingSelectedSongs}
               selectedItems={selectedSongs}
               rowClickHandler={this.setActiveSong}
               itemSelectHandler={this.addOrRemoveSelectedSong}/>
@@ -285,6 +287,7 @@ const mapStateToProps = (state: any, ownProps?: OwnProps): ReduxProps => {
     userPlaylists: state.userPlaylists.playlists,
     userRecentSongs: state.userRecentSongs.songs,
     selectedSongs: state.selectedSongs.songs,
+    fetchingSelectedSongs: state.selectedSongs.fetching,
     songCache: state.songCache.songs,
   }
 }

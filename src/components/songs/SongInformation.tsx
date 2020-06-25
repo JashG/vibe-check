@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
 import { TrackAndAudio } from '../../constants/types';
 import Header from '../Header';
 import SongBio from './SongBio';
-import SongAudioFeatures from './SongAudioFeatures';
+import AudioFeaturesList from './AudioFeaturesList';
+import Loading from '../page_elements/Loading';
 
 type Props = {
   song: TrackAndAudio | undefined,
@@ -22,24 +22,19 @@ const SongInformation = (props: Props) => {
 
     // If there is no selected song, render UI that shows placeholder text
     if (!songData) {
+      // return (
+      //   <Segment style={{'margin': '0'}}>
+      //     <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
+      //   </Segment>
+      // );
       return (
-        <Segment style={{'margin': '0'}}>
-          <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
-        </Segment>
-      );
+        <div>Click on a song to view more information!</div>
+      )
     }
 
     // If there is a selected song, but we're loading its audio features, render loading icon
     if (loading) {
-      return (
-        <Segment style={{'margin': '0'}}>
-          <Dimmer active inverted>
-            <Loader inverted>Loading</Loader>
-          </Dimmer>
-
-          <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
-        </Segment>
-      );
+      return Loading;
     }
 
     const song = songData['song'];
@@ -48,14 +43,14 @@ const SongInformation = (props: Props) => {
     return (
       <SongDataContainer>
         <SongBio song={song}/>
-        <SongAudioFeatures audioFeatures={audioFeatures}/>
+        <AudioFeaturesList audioFeatures={audioFeatures}/>
       </SongDataContainer>
     ); 
   }
 
   return(
     <div>
-      <Header defaultText='Song Audio Features' icon='headphones'/>
+      <Header defaultText='Song Information' icon='headphones'/>
       {renderSongData()}
     </div>
   );

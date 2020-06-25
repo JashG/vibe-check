@@ -7,6 +7,7 @@ import Header from '../Header';
 type Props = {
   defaultText: string,
   items: TrackSnippet[],
+  fetchingItems: boolean,
   selectedItems: TrackAndAudio[],
   rowClickHandler: (song: TrackSnippet) => void,
   itemSelectHandler: (song: TrackSnippet) => void,
@@ -35,7 +36,7 @@ class Library extends Component<Props, any> {
 
   render() {
     const { activeTable } = this.state;
-    const { defaultText, tableOptions, items, selectedItems, rowClickHandler, itemSelectHandler } = this.props;
+    const { defaultText, tableOptions, items, fetchingItems, selectedItems, rowClickHandler, itemSelectHandler } = this.props;
 
     return(
       <div>
@@ -48,6 +49,7 @@ class Library extends Component<Props, any> {
         <LibraryContent>
           <SongLibraryTable
           items={items}
+          fetchingItems={fetchingItems}
           itemType='track'
           selectedItems={selectedItems}
           rowClickHandler={rowClickHandler}

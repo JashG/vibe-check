@@ -39,12 +39,12 @@ export interface AlbumImage {
 
 export interface TrackSnippet {
   externalUrl: string,
-  playedAt: string,
   albumName: string,
   albumImage: string,
   artists: Artist[],
   name: string,
   id: string,
+  playedAt?: string,
   duration?: string,
 }
 
