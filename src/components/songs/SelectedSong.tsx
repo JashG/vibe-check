@@ -5,8 +5,8 @@ import { PRIMARY, TEXT_LIGHT, DARK_ACCENT } from '../../constants/colors';
 
 type Props = {
   song: TrackAndAudio,
-  itemTextClickHandler: (song: TrackSnippet) => void,
-  itemIconClickHandler: (song: TrackSnippet) => void,
+  itemTextClickHandler?: (song: TrackSnippet) => void,
+  itemIconClickHandler?: (song: TrackSnippet) => void,
 }
 
 const SelectedSongContainer = styled.div`
@@ -132,12 +132,12 @@ const SelectedSong = (props: Props) => {
       <SongImageContainer>
         <SongImage url={image}/>
       </SongImageContainer>
-      <SongTextContainer onClick={() => itemTextClickHandler(songData)}>
+      <SongTextContainer onClick={itemTextClickHandler ? () => itemTextClickHandler(songData) : undefined}>
         <SongName>{songName}</SongName>
         <span>{artists[0]['name']}</span>
       </SongTextContainer>
       <RemoveSongContainer>
-        <CloseIcon onClick={() => itemIconClickHandler(songData)}/>
+        <CloseIcon onClick={itemIconClickHandler ? () => itemIconClickHandler(songData) : undefined}/>
       </RemoveSongContainer>
     </SelectedSongContainer>
   );

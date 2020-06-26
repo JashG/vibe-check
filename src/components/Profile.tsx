@@ -10,7 +10,7 @@ import { fetchUserData, fetchUserPlaylists, fetchUserRecentSongs, setUserData, s
 import Card from './cards/Card';
 import Library from './library/Library';
 import SongInformation from './songs/SongInformation';
-import SearchBar from './SearchBar';
+import SelectedSongsPane from './songs/SelectedSongsPane';
 
 // Maximum number of songs user can select before searching for new music
 export const MAX_SELECTED_SONGS = 5;
@@ -241,7 +241,7 @@ class Profile extends Component<Props, State> {
     return axios.get('/api/audio-features/' + songId);
   }
 
-  render() {
+  render = () => {
     const { activeSong, loadingActiveSong } = this.state;
     const { userRecentSongs, selectedSongs, fetchingSelectedSongs } = this.props;
 
@@ -249,7 +249,7 @@ class Profile extends Component<Props, State> {
       <Container style={{'marginTop': '10px'}}>
         <StickyRow>
           <Col xs={{span: 12, order: 1}} md={{span: 8, order:1}}>
-            <SearchBar
+            <SelectedSongsPane
             songs={selectedSongs}
             itemTextClickHandler={this.setActiveSong}
             itemIconClickHandler={this.addOrRemoveSelectedSong}/>
